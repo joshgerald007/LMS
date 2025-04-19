@@ -78,7 +78,16 @@ export default defineConfig((/* ctx */) => {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
+<<<<<<< Updated upstream
       config: {},
+=======
+      config: {
+        dark: 'auto',
+        brand: {
+          primary: '#2b6ca1',
+        },
+      },
+>>>>>>> Stashed changes
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack

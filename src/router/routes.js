@@ -3,10 +3,6 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-<<<<<<< Updated upstream
-      { path: '', component: () => import('pages/IndexPage.vue') }
-    ]
-=======
       { path: '', name: 'Index', component: () => import('pages/IndexPage.vue') },
       {
         path: '/admin/login',
@@ -41,23 +37,22 @@ const routes = [
       {
         path: '/admin/teacher',
         name: 'Teacher',
-        component: import('pages/admin/teacher/Teacher.vue'),
+        component: import('pages/admin/teacher/TeacherList.vue'),
       },
       {
         path: '/admin/schedule',
         name: 'Schedule',
-        component: import('pages/admin/schedule/Schedule.vue'),
+        component: import('pages/admin/schedule/ScheduleList.vue'),
       },
     ],
->>>>>>> Stashed changes
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
-  }
+    component: () => import('pages/ErrorNotFound.vue'),
+  },
 ]
 
 export default routes

@@ -33,25 +33,7 @@
           size="sm"
           icon="download"
         />
-        <q-btn
-          color="primary"
-          label="Add School Year"
-          @click="addModal = true"
-          size="sm"
-          icon="add"
-        />
-      </template>
-
-      <template v-slot:body-cell-isActive="props">
-        <q-td :props="props">
-          <div>
-            <q-badge v-if="props.value === 1" color="green" label="Yes" />
-            <q-badge v-else color="red" label="No" />
-          </div>
-          <div class="my-table-details">
-            {{ props.row.details }}
-          </div>
-        </q-td>
+        <q-btn color="primary" label="Add Course" @click="addRow" size="sm" icon="add" />
       </template>
 
       <template v-slot:body-cell-Actions="props">
@@ -75,20 +57,18 @@
         </q-td>
       </template>
     </q-table>
-
-    <q-dialog v-model="addModal">
-      <create-update />
-    </q-dialog>
   </q-page>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import createUpdate from './SchoolYearCreateUpdate.vue'
-
-const addModal = ref(false)
-
 const columns = [
+  {
+    name: 'Code',
+    label: 'Code',
+    align: 'left',
+    field: 'Code',
+    sortable: true,
+  },
   {
     name: 'Name',
     label: 'Name',
@@ -97,109 +77,30 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'isActive',
-    label: 'is Active',
-    align: 'left',
-    field: 'isActive',
-    sortable: true,
-  },
-  {
     name: 'Actions',
     label: 'Actions',
     align: 'left',
     field: 'Actions',
-    sortable: false,
+    sortable: true,
   },
 ]
 
 const report = [
   {
-    Name: '2022-2023',
-    isActive: 0,
+    Code: 'BSIT',
+    Name: 'Bachelor of Science in Information Technology',
   },
   {
-    Name: '2022-2023',
-    isActive: 0,
+    Code: 'BSAIS',
+    Name: '	Bachelor of Science in Accounting Information System',
   },
   {
-    Name: '2022-2023',
-    isActive: 0,
+    Code: 'BSBA',
+    Name: 'Bachelor of Science in Business Administration',
   },
   {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2022-2023',
-    isActive: 0,
-  },
-  {
-    Name: '2023-2024',
-    isActive: 0,
-  },
-  {
-    Name: '2024-2025',
-    isActive: 1,
-  },
-  {
-    Name: '2025-2026',
-    isActive: 0,
+    Code: 'BSIT',
+    Name: 'Bachelor of Science in Information Technology',
   },
 ]
 </script>
@@ -235,6 +136,19 @@ thead tr:first-child th,
 
   tbody {
     scroll-margin-top: 48px;
+  }
+}
+
+.body--light {
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th,
+  .q-field__native,
+  .q-field__prefix,
+  .q-field__suffix,
+  .q-field__input,
+  .q-field__marginal {
+    color: white;
   }
 }
 </style>

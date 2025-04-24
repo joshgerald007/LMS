@@ -5,27 +5,35 @@ const routes = [
     children: [
       { path: 'admin', name: 'Index', component: () => import('pages/admin/IndexPage.vue') },
       {
-        path: '/admin/student',
-        name: 'Admin Student',
-        component: import('pages/admin/student/StudentList.vue'),
+        path: '/admin/login',
+        name: 'Admin Login',
+        component: import('pages/admin/LoginPage.vue'),
       },
       {
-        path: '/admin/program',
-        name: 'Admin Program',
-        component: import('pages/admin/program/ProgramList.vue'),
+        path: '/admin/schoolyear',
+        name: 'School Year',
+        component: import('pages/admin/schoolyear/SchoolYearList.vue'),
+      },
+      {
+        path: '/admin/semester',
+        name: 'Semester',
+        component: import('pages/admin/semester/SemesterList.vue'),
+      },
+      {
+        path: '/admin/course',
+        name: 'Course',
+        component: import('pages/admin/course/CourseList.vue'),
       },
       {
         path: '/admin/section',
-        name: 'Admin Section',
+        name: 'Section',
         component: import('pages/admin/section/SectionList.vue'),
       },
       {
         path: '/admin/subject',
-        name: 'Admin Subject',
+        name: 'Subject',
         component: import('pages/admin/subject/SubjectList.vue'),
       },
-<<<<<<< Updated upstream
-=======
       {
         path: '/admin/teacher',
         name: 'Teacher',
@@ -41,7 +49,6 @@ const routes = [
         name: 'Faculty',
         component: import('pages/admin/faculty/FacultyList.vue'),
       },
->>>>>>> Stashed changes
     ],
   },
 

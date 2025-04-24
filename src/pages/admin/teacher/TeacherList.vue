@@ -10,7 +10,7 @@
         :rows-per-page-options="[0]"
         :virtual-scroll-sticky-size-start="48"
         row-key="index"
-        title="Subject"
+        title="Students"
         :rows="rows"
         :columns="columns"
       />
@@ -24,7 +24,7 @@ import { date } from 'quasar'
 const columns = [
   {
     name: 'StudentID',
-    label: 'Course ID',
+    label: 'Student ID',
     align: 'left',
     field: 'StudentID',
     sortable: true,

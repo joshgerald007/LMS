@@ -3,7 +3,7 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'Index', component: () => import('pages/IndexPage.vue') },
+      { path: 'admin', name: 'Index', component: () => import('pages/admin/IndexPage.vue') },
       {
         path: '/admin/login',
         name: 'Admin Login',
@@ -43,6 +43,11 @@ const routes = [
         path: '/admin/schedule',
         name: 'Schedule',
         component: import('pages/admin/schedule/ScheduleList.vue'),
+      },
+      {
+        path: '/admin/faculty',
+        name: 'Faculty',
+        component: import('pages/admin/faculty/FacultyList.vue'),
       },
     ],
   },

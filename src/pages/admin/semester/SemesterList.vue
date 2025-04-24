@@ -11,7 +11,7 @@ import { ref } from 'vue'
 import TableListing from '../../../components/TableListing.vue'
 import CreateUpdate from './CreateUpdate.vue'
 import { useRoute } from 'vue-router'
-import { loadData } from 'boot/request.js'
+import { list } from 'boot/get.js'
 // import { date } from 'quasar'
 
 const route = useRoute()
@@ -74,7 +74,7 @@ const columns = [
 const data = ref([])
 
 async function getData() {
-  data.value = await loadData('berry')
+  data.value = await list('semesters')
 }
 getData()
 </script>

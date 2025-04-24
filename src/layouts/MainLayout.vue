@@ -26,8 +26,18 @@ import { ref } from 'vue'
 import HeaderComponent from 'components/HeaderComponent.vue'
 import FooterComponent from 'components/FooterComponent.vue'
 import SideBar from 'components/SideBar.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useCredentialsStore } from '../../src/stores/credentials'
+
+const store = useCredentialsStore()
 
 const route = useRoute()
+const router = useRouter()
 const leftDrawerOpen = ref(false)
+
+if (route.name === 'Admin Login' && store.Token) {
+  router.push({ path: '/admin' })
+} else if (route.name !== 'Admin Login' && !store.Token) {
+  router.push({ path: '/admin/login' })
+}
 </script>

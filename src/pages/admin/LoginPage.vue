@@ -59,9 +59,10 @@
                 outlined
                 dense
                 class="q-py-sm"
+                :hint="emailValidation || ''"
               />
 
-              <q-item-label>Password</q-item-label>
+              <q-item-label class="q-mt-lg">Password</q-item-label>
               <q-input
                 v-model="password"
                 type="password"
@@ -69,12 +70,13 @@
                 outlined
                 dense
                 class="q-py-sm"
+                :hint="passwordValidation || ''"
               />
             </div>
           </q-card-section>
           <q-card-section>
             <div class="row q-px-sm">
-              <q-btn color="primary" label="SIGN IN" class="full-width" />
+              <q-btn color="primary" label="SIGN IN" class="full-width" @click="loginSubmit()" />
             </div>
             <div class="q-ma-md text-center">
               <q-btn
@@ -93,9 +95,49 @@
 
 <script setup>
 import { ref } from 'vue'
+import { login } from 'boot/auth.js'
+import { useCredentialsStore } from 'stores/credentials'
+import { useRouter } from 'vue-router'
 
 const email = ref('')
 const password = ref('')
+
+const router = useRouter()
+
+const emailValidation = ref(false)
+const passwordValidation = ref(false)
+
+const store = useCredentialsStore()
+
+async function loginSubmit() {
+  if (!email.value) {
+    emailValidation.value = 'Please enter your email.'
+  } else {
+    emailValidation.value = false
+  }
+
+  if (!password.value) {
+    passwordValidation.value = 'Please enter your password.'
+  } else {
+    passwordValidation.value = false
+  }
+
+  if (emailValidation.value || passwordValidation.value) {
+    return
+  }
+  const result = await login({ email: email.value, password: password.value })
+
+  if (result.status !== 200) {
+    emailValidation.value = result.data.message
+  } else {
+    store.setToken(result.data.token)
+    store.setEmail(result.data.user.email)
+    store.setFirstName(result.data.user.first_name)
+    store.setLastName(result.data.user.last_name)
+
+    router.push({ path: '/admin' })
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -105,5 +147,9 @@ const password = ref('')
 
 .q-banner {
   background-color: #ef5350 !important;
+}
+
+:deep() .q-field__messages {
+  color: #ef5350;
 }
 </style>

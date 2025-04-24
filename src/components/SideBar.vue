@@ -152,6 +152,13 @@ const linksList = [
   },
   {
     icon: 'mdi-account-group',
+    label: 'Faculty',
+    name: 'Faculty',
+    separator: false,
+    link: '/admin/faculty',
+  },
+  {
+    icon: 'mdi-account-group',
     label: 'User',
     name: 'User',
     separator: false,

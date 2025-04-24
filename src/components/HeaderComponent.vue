@@ -88,7 +88,7 @@
 
               <div class="text-subtitle1 q-mb-xs">John Doe</div>
 
-              <q-btn color="primary" label="Logout" push size="sm" v-close-popup />
+              <q-btn color="primary" label="Logout" push size="sm" @click="logoutSubmit()" />
             </div>
           </div>
         </q-menu>
@@ -100,8 +100,13 @@
 <script setup>
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { logout } from 'boot/auth.js'
+import { useRouter } from 'vue-router'
+import { useCredentialsStore } from 'stores/credentials'
 
 const $q = useQuasar()
+const router = useRouter()
+const store = useCredentialsStore()
 
 const profilecolor = ref()
 profilecolor.value = localStorage.getItem('profile color')
@@ -128,5 +133,13 @@ const emit = defineEmits(['toggleLeftDrawer'])
 
 function toggleLeftDrawer() {
   emit('toggleLeftDrawer')
+}
+
+async function logoutSubmit() {
+  await logout()
+
+  store.$reset()
+
+  router.push({ path: '/admin/login' })
 }
 </script>

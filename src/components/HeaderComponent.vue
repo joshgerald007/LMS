@@ -103,6 +103,7 @@ import { useQuasar } from 'quasar'
 import { logout } from 'boot/auth.js'
 import { useRouter } from 'vue-router'
 import { useCredentialsStore } from 'stores/credentials'
+import { LocalStorage } from 'quasar'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -139,6 +140,7 @@ async function logoutSubmit() {
   await logout()
 
   store.$reset()
+  LocalStorage.clear()
 
   router.push({ path: '/admin/login' })
 }

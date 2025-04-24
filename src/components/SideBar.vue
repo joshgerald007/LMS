@@ -115,6 +115,23 @@ const linksList = [
       },
     ],
   },
+<<<<<<< Updated upstream
+=======
+  {
+    icon: 'mdi-account-group',
+    label: 'Faculty',
+    name: 'Faculty',
+    separator: false,
+    link: '/admin/faculty',
+  },
+  {
+    icon: 'mdi-account-group',
+    label: 'User',
+    name: 'User',
+    separator: false,
+    link: '/user',
+  },
+>>>>>>> Stashed changes
 ]
 
 const panel = ref('main')

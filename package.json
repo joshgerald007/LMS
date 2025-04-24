@@ -2,7 +2,7 @@
   "name": "lms",
   "version": "0.0.1",
   "description": "Learning Management System",
-  "productName": "LMS",
+  "productName": "PMFTCI",
   "author": "Josh Gerald Gugol <joshgeraldgugol@Joshs-MacBook-Pro.local>",
   "type": "module",
   "private": true,

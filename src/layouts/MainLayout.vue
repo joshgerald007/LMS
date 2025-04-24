@@ -110,6 +110,7 @@
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import SideBar from 'components/SideBar.vue'
+<<<<<<< Updated upstream
 
 const leftDrawerOpen = ref(false)
 const $q = useQuasar()
@@ -139,5 +140,20 @@ function toggleLeftDrawer() {
 function toggleDarkMode() {
   $q.dark.toggle()
   localStorage.setItem('darkmode', darkmode.value)
+=======
+import { useRoute, useRouter } from 'vue-router'
+import { useCredentialsStore } from '../../src/stores/credentials'
+
+const store = useCredentialsStore()
+
+const route = useRoute()
+const router = useRouter()
+const leftDrawerOpen = ref(false)
+
+if (route.name === 'Admin Login' && store.Token) {
+  router.push({ path: '/admin' })
+} else if (route.name !== 'Admin Login' && !store.Token) {
+  router.push({ path: '/admin/login' })
+>>>>>>> Stashed changes
 }
 </script>

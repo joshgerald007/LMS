@@ -3,7 +3,7 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'Index', component: () => import('pages/IndexPage.vue') },
+      { path: 'admin', name: 'Index', component: () => import('pages/admin/IndexPage.vue') },
       {
         path: '/admin/student',
         name: 'Admin Student',
@@ -24,6 +24,24 @@ const routes = [
         name: 'Admin Subject',
         component: import('pages/admin/subject/SubjectList.vue'),
       },
+<<<<<<< Updated upstream
+=======
+      {
+        path: '/admin/teacher',
+        name: 'Teacher',
+        component: import('pages/admin/teacher/TeacherList.vue'),
+      },
+      {
+        path: '/admin/schedule',
+        name: 'Schedule',
+        component: import('pages/admin/schedule/ScheduleList.vue'),
+      },
+      {
+        path: '/admin/faculty',
+        name: 'Faculty',
+        component: import('pages/admin/faculty/FacultyList.vue'),
+      },
+>>>>>>> Stashed changes
     ],
   },
 

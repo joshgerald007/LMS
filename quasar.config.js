@@ -84,9 +84,12 @@ export default defineConfig((/* ctx */) => {
     framework: {
       config: {
         dark: 'auto',
+<<<<<<< HEAD
         brand: {
           primary: '#2b6ca1',
         },
+=======
+>>>>>>> main
       },
 
       // iconSet: 'material-icons', // Quasar icon set

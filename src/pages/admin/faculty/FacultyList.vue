@@ -6,6 +6,7 @@
     :loading="loading"
     ref="tl"
     @getData="getData"
+    @getExport="getExport"
   >
     <template #create-update-modal="a">
       <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
@@ -35,7 +36,7 @@ import TableListing from '../../../components/TableListing.vue'
 import CreateUpdate from './CreateUpdate.vue'
 import DetailsInfo from './DetailsInfo.vue'
 import { useRoute } from 'vue-router'
-import { list } from 'boot/get.js'
+import { list, exports } from 'boot/get.js'
 import { del } from 'boot/delete.js'
 import { Loading } from 'quasar'
 
@@ -44,7 +45,7 @@ const route = useRoute()
 const columns = [
   {
     name: 'name',
-    label: 'name',
+    label: 'Name',
     align: 'left',
     field: 'name',
     sortable: true,
@@ -89,16 +90,32 @@ const loading = ref(false)
 async function getData(filter = {}) {
   let start = ''
   let end = ''
+  let sBy = ''
+  let oBy = ''
   if (filter.start) {
     start = `&start=${filter.start}`
   }
   if (filter.end) {
     end = `&end=${filter.end}`
   }
+
+  if (filter?.page?.sortBy) {
+    sBy = `&order_by=${filter.page.sortBy}`
+    oBy = `&direction=${filter.page.descending ? 'asc' : 'desc'}`
+  }
+
   loading.value = true
-  const result = await list(`faculties?search=${filter.search || ''}&per_page=250${start}${end}`)
+  const result = await list(
+    `faculties?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+  )
   loading.value = false
-  data.value = result?.data?.result?.data || []
+  data.value = result?.data?.result || []
+  data.value.sortBy = filter.page?.sortBy
+  data.value.descending = filter.page?.descending
 }
-getData()
+
+async function getExport() {
+  const result = await exports(`faculties`)
+  console.log(result)
+}
 </script>

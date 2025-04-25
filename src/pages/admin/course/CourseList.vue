@@ -1,79 +1,69 @@
 <template>
-  <q-page style="min-height: 200px">
-    <q-table
-      flat
-      bordered
-      row-key="index"
-      :rows="report"
-      :columns="columns"
-      class="my-sticky-table"
-    >
-      <template v-slot:top>
-        <q-input
-          filled
-          class="col-4"
-          borderless
-          dense
-          debounce="300"
-          v-model="filter"
-          placeholder="Search"
-        >
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+  <table-listing
+    :columns="columns"
+    :data="data"
+    :name="route.name"
+    :loading="loading"
+    ref="tl"
+    @getData="getData"
+    @getExport="getExport"
+  >
+    <template #create-update-modal="a">
+      <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
+    </template>
+    <template #details-info-modal="a">
+      <DetailsInfo :value="a" />
+    </template>
+    <template #confirm-delete-modal="a">
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
+          <span class="q-ml-sm">Are you sure you want to delete this course?</span>
+        </q-card-section>
 
-        <q-space />
-
-        <q-btn
-          color="primary"
-          label="Download Excel"
-          class="q-mr-md"
-          @click="addRow"
-          size="sm"
-          icon="download"
-        />
-        <q-btn color="primary" label="Add Course" @click="addRow" size="sm" icon="add" />
-      </template>
-
-      <template v-slot:body-cell-Actions="props">
-        <q-td :props="props" style="width: 250px">
-          <q-btn
-            color="warning text-black"
-            label="Edit"
-            class="q-mr-md"
-            @click="addRow"
-            size="sm"
-            icon="edit_square"
-          />
-          <q-btn
-            color="red"
-            label="Delete"
-            class="q-mr-md"
-            @click="addRow"
-            size="sm"
-            icon="delete"
-          />
-        </q-td>
-      </template>
-    </q-table>
-  </q-page>
+        <q-card-actions align="right">
+          <q-btn flat label="Yes" color="primary" @click="deleteItem(a.value.id)" />
+          <q-btn flat label="No" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </template>
+  </table-listing>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import TableListing from '../../../components/TableListing.vue'
+import CreateUpdate from './CreateUpdate.vue'
+import DetailsInfo from './DetailsInfo.vue'
+import { useRoute } from 'vue-router'
+import { list, exports } from 'boot/get.js'
+import { del } from 'boot/delete.js'
+import { Loading } from 'quasar'
+
+const route = useRoute()
+
 const columns = [
   {
-    name: 'Code',
+    name: 'code',
     label: 'Code',
     align: 'left',
-    field: 'Code',
+    field: 'code',
     sortable: true,
   },
   {
-    name: 'Name',
+    name: 'name',
     label: 'Name',
     align: 'left',
-    field: 'Name',
+    field: 'name',
+    sortable: true,
+  },
+  {
+    name: 'faculty',
+    label: 'Faculty',
+    align: 'left',
+    field: (row) => {
+      return row.faculty?.name || '--'
+    },
     sortable: true,
   },
   {
@@ -85,70 +75,50 @@ const columns = [
   },
 ]
 
-const report = [
-  {
-    Code: 'BSIT',
-    Name: 'Bachelor of Science in Information Technology',
-  },
-  {
-    Code: 'BSAIS',
-    Name: '	Bachelor of Science in Accounting Information System',
-  },
-  {
-    Code: 'BSBA',
-    Name: 'Bachelor of Science in Business Administration',
-  },
-  {
-    Code: 'BSIT',
-    Name: 'Bachelor of Science in Information Technology',
-  },
-]
+const tl = ref(null)
+
+async function deleteItem(id) {
+  Loading.show()
+  const result = await del('course', id)
+  Loading.hide()
+  if (result.status === 200) {
+    tl.value.closeModal()
+    getData()
+  }
+}
+
+const data = ref([])
+const loading = ref(false)
+
+async function getData(filter = {}) {
+  let start = ''
+  let end = ''
+  let sBy = ''
+  let oBy = ''
+  if (filter.start) {
+    start = `&start=${filter.start}`
+  }
+  if (filter.end) {
+    end = `&end=${filter.end}`
+  }
+
+  if (filter?.page?.sortBy) {
+    sBy = `&order_by=${filter.page.sortBy}`
+    oBy = `&direction=${filter.page.descending ? 'asc' : 'desc'}`
+  }
+
+  loading.value = true
+  const result = await list(
+    `course?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+  )
+  loading.value = false
+  data.value = result?.data?.result || []
+  data.value.sortBy = filter.page?.sortBy
+  data.value.descending = filter.page?.descending
+}
+
+async function getExport() {
+  const result = await exports(`course`)
+  console.log(result)
+}
 </script>
-
-<style lang="scss">
-thead tr:first-child th,
-.q-table__bottom {
-  background-color: var(--q-primary);
-}
-
-.my-sticky-table {
-  height: auto;
-  max-height: calc(100vh - 200px);
-
-  .q-table__top,
-  .q-table__bottom,
-  thead tr:first-child th {
-    background-color: var(-q--primary);
-  }
-
-  thead tr th {
-    position: sticky;
-    z-index: 1;
-  }
-
-  thead tr:last-child th {
-    top: 48px;
-  }
-
-  thead tr:first-child th {
-    top: 0;
-  }
-
-  tbody {
-    scroll-margin-top: 48px;
-  }
-}
-
-.body--light {
-  .q-table__top,
-  .q-table__bottom,
-  thead tr:first-child th,
-  .q-field__native,
-  .q-field__prefix,
-  .q-field__suffix,
-  .q-field__input,
-  .q-field__marginal {
-    color: white;
-  }
-}
-</style>

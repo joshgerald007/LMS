@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">{{ AddorEdit }} School Year</div>
+      <div class="text-h6">{{ AddorEdit }} Course</div>
     </q-card-section>
 
     <q-separator />
@@ -9,7 +9,17 @@
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Name" v-model="schoolyear.name" />
+          <q-input outlined dense label="Code" v-model="course.code" />
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
+          <q-input outlined dense label="Name" v-model="course.name" />
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
+          <q-input outlined dense label="Faculty" v-model="course.faculty_id" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -19,7 +29,7 @@
             dense
             label="Description"
             type="textarea"
-            v-model="schoolyear.description"
+            v-model="course.description"
           />
         </q-item-section>
       </q-item>
@@ -35,7 +45,7 @@
               { label: 'Active', value: 1 },
               { label: 'Inactive', value: 0 },
             ]"
-            v-model="schoolyear.is_active"
+            v-model="course.is_active"
           />
         </q-item-section>
       </q-item>
@@ -71,7 +81,7 @@ const AddorEdit = computed(() => {
   return 'Add'
 })
 
-const schoolyear = ref({
+const course = ref({
   name: '',
   description: '',
   is_active: 1,
@@ -82,13 +92,13 @@ const emit = defineEmits(['getData', 'closeModal'])
 async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
-    const result = await add('school-years', schoolyear.value)
+    const result = await add('faculties', course.value)
     if (!result.error) {
       emit('getData')
       emit('closeModal')
     }
   } else if (AddorEdit.value === 'Edit') {
-    const result = await edit('school-years', props.value.value.id, schoolyear.value)
+    const result = await edit('faculties', props.value.value.id, course.value)
     if (!result.error) {
       emit('getData')
       emit('closeModal')
@@ -99,9 +109,9 @@ async function submit() {
 
 onMounted(() => {
   if (AddorEdit.value === 'Edit') {
-    schoolyear.value.name = props.value.value.name
-    schoolyear.value.description = props.value.value.description
-    schoolyear.value.is_active = props.value.value.is_active
+    course.value.name = props.value.value.name
+    course.value.description = props.value.value.description
+    course.value.is_active = props.value.value.is_active
   }
 })
 </script>

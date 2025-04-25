@@ -4,13 +4,13 @@
       flat
       bordered
       row-key="index"
-      :rows="props.data"
+      :rows="props.data?.data || []"
       :columns="props.columns"
       class="my-sticky-table"
-      :pagination="{
-        rowsPerPage: 1000,
-      }"
+      v-model:pagination="paging"
       :loading="props.loading"
+      @request="searchData"
+      ref="tableRef"
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
@@ -77,7 +77,7 @@
             color="primary"
             label="Download Excel"
             class="q-mr-md"
-            @click="toAdd()"
+            @click="emit('getExport')"
             size="sm"
             icon="download"
           />
@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import { ref, useSlots, defineExpose } from 'vue'
+import { ref, useSlots, defineExpose, computed, onMounted } from 'vue'
 import { date } from 'quasar'
 
 const slots = useSlots()
@@ -160,6 +160,8 @@ const confirmModal = ref(false)
 
 const selectedValue = ref()
 const searchValue = ref()
+
+const tableRef = ref()
 
 const dateRange = ref({
   from: date.formatDate(new Date(), 'YYYY/MM/DD'),
@@ -173,7 +175,7 @@ const props = defineProps({
     required: true,
   },
   data: {
-    type: Array,
+    type: Object,
     required: true,
   },
   name: {
@@ -212,10 +214,21 @@ function closeModal() {
   confirmModal.value = false
 }
 
+const paging = computed(() => {
+  return {
+    rowsPerPage: props.data?.per_page || 10,
+    rowsNumber: props.data?.total || 0,
+    page: props.data?.current_page || 1,
+    sortBy: props.data?.sortBy || '',
+    descending: props.data?.descending || '',
+  }
+})
+
 const emit = defineEmits(['getData'])
 
-function searchData() {
+function searchData(p = null) {
   emit('getData', {
+    page: p ? p.pagination : paging.value,
     search: searchValue.value,
     start: searchByDate.value ? date.formatDate(new Date(dateRange.value.from), 'X') : '',
     end: searchByDate.value ? date.formatDate(new Date(dateRange.value.to), 'X') : '',
@@ -224,6 +237,10 @@ function searchData() {
 
 defineExpose({
   closeModal,
+})
+
+onMounted(() => {
+  tableRef.value.requestServerInteraction()
 })
 </script>
 

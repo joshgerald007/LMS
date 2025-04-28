@@ -1,4 +1,10 @@
 <template>
+  <div class="q-pb-sm">
+    <q-breadcrumbs>
+      <q-breadcrumbs-el label="Home" />
+      <q-breadcrumbs-el label="Faculty" />
+    </q-breadcrumbs>
+  </div>
   <table-listing
     :columns="columns"
     :data="data"

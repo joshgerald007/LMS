@@ -10,6 +10,11 @@ const routes = [
         component: import('pages/admin/LoginPage.vue'),
       },
       {
+        path: '/admin/forgotpassword',
+        name: 'Forgot Password',
+        component: import('pages/admin/ForgotPassword.vue'),
+      },
+      {
         path: '/admin/schoolyear',
         name: 'School Year',
         component: import('pages/admin/schoolyear/SchoolYearList.vue'),

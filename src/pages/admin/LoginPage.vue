@@ -1,47 +1,33 @@
 <template>
   <div class="main_bg">
     <div class="row" style="height: 100vh">
-      <div class="col-8 q-pa-lg">
+      <div class="col-8 q-pa-lg relative-position">
         <div
-          class="flex relative-position"
           style="
             background-image: url('https://photos.wikimapia.org/p/00/04/05/16/76_big.jpg');
             background-repeat: no-repeat;
             background-size: cover;
             height: 100%;
             border-radius: 15px;
+            opacity: 0.6;
           "
-        >
-          <div class="q-pa-md q-gutter-sm">
-            <q-banner rounded class="text-white bg-red">
-              Town hall meeting will be schedule for November 20, 2026
-            </q-banner>
-
-            <q-banner rounded class="text-white bg-red">
-              Start of school year 2025-2026 for College will be on June 15, 2025
-            </q-banner>
-
-            <q-banner rounded class="text-white bg-red">
-              Parent and Teacher seminar will be schedule on September 11, 2025
-            </q-banner>
-          </div>
-        </div>
+        ></div>
+        <img
+          alt=""
+          src="/src/assets/logo.png"
+          style="
+            width: 200px;
+            height: 200px;
+            border-radius: 100px;
+            position: absolute;
+            top: calc(50% - 100px);
+            left: calc(50% - 100px);
+          "
+        />
       </div>
       <div class="flex flex-center col-4">
         <q-card flat>
           <q-card-section class="q-px-lg">
-            <div class="row q-mt-xs">
-              <q-toolbar-title
-                class="text-weight-medium cursor-pointer"
-                style="color: rgb(86, 106, 127); font-size: 1.6rem; letter-spacing: -0.5px"
-              >
-                <span class="text-primary">
-                  <q-avatar style="font-size: 32px">
-                    <img alt="" src="/src/assets/logo.png" />
-                  </q-avatar>
-                </span>
-              </q-toolbar-title>
-            </div>
             <div class="row q-mt-sm text-weight-medium" style="font-size: 23px">
               Welcome to Pinamalayan Maritime Foundation and Technological College Inc.!
             </div>
@@ -84,6 +70,7 @@
                 flat
                 label="Forgot Password?"
                 class="full-width no-outline text-capitalize"
+                @click="router.push({ path: '/admin/forgotpassword' })"
               />
             </div>
           </q-card-section>

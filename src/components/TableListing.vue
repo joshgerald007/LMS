@@ -25,49 +25,78 @@
             v-model="searchValue"
             @keyup.enter="searchData()"
           >
+            <q-menu
+              @click.stop
+              persistent
+              anchor="bottom left"
+              self="top left"
+              v-if="filteringShow"
+            >
+              <q-card class="q-py-xs" style="width: 300px">
+                <q-item>
+                  <q-item-section justify-center>
+                    <q-select
+                      outlined
+                      dense
+                      label="Status"
+                      emit-value
+                      map-options
+                      v-model="status_filter"
+                      :options="[
+                        { label: 'Active', value: 1 },
+                        { label: 'Inactive', value: 0 },
+                      ]"
+                    />
+                  </q-item-section>
+                </q-item>
+
+                <q-item>
+                  <q-item-section justify-center>
+                    <q-input
+                      outlined
+                      dense
+                      :model-value="`${daterange_filter.from} - ${daterange_filter.to}`"
+                      label="Created Date"
+                    >
+                      <template v-slot:append>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-date v-model="daterange_filter" range>
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Close" color="primary" flat />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                  </q-item-section>
+                </q-item>
+
+                <q-item>
+                  <q-btn size="sm" dense style="height: 25px" color="primary" class="q-px-sm">
+                    Close
+                  </q-btn>
+                  <q-btn
+                    size="sm"
+                    dense
+                    style="height: 25px"
+                    color="warning"
+                    class="q-ml-sm q-px-sm"
+                    text-color="black"
+                    >Clear</q-btn
+                  >
+                </q-item>
+              </q-card>
+            </q-menu>
+            <template v-slot:prepend>
+              <q-icon name="mdi-filter-variant" @click="filteringShow = true" />
+            </template>
             <template v-slot:append>
               <q-icon name="search" />
             </template>
           </q-input>
-          <q-input
-            outlined
-            dense
-            :model-value="`${dateRange.from} - ${dateRange.to}`"
-            style="width: calc(50% - 90px); margin-right: 20px; min-width: 180px"
-            :disable="!searchByDate"
-            class="q-pa-xs"
-          >
-            <template v-slot:prepend>
-              <q-icon
-                name="mdi-checkbox-marked-outline"
-                v-if="searchByDate"
-                class="cursor-pointer"
-                @click="searchByDate = false"
-              />
-              <q-icon
-                name="mdi-checkbox-blank-outline"
-                v-else
-                class="cursor-pointer"
-                @click="searchByDate = true"
-              />
-            </template>
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                  v-if="searchByDate"
-                >
-                  <q-date v-model="dateRange" range>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
+
           <q-btn style="width: 80px" dense color="primary" label="Search" @click="searchData()" />
         </div>
 
@@ -164,7 +193,10 @@ const searchValue = ref()
 
 const tableRef = ref()
 
-const dateRange = ref({
+const filteringShow = ref(false)
+
+const status_filter = ref()
+const daterange_filter = ref({
   from: date.formatDate(new Date(), 'YYYY/MM/DD'),
   to: date.formatDate(new Date(), 'YYYY/MM/DD'),
 })
@@ -231,8 +263,8 @@ function searchData(p = null) {
   emit('getData', {
     page: p ? p.pagination : paging.value,
     search: searchValue.value,
-    start: searchByDate.value ? date.formatDate(new Date(dateRange.value.from), 'X') : '',
-    end: searchByDate.value ? date.formatDate(new Date(dateRange.value.to), 'X') : '',
+    start: searchByDate.value ? date.formatDate(new Date(daterange_filter.value.from), 'X') : '',
+    end: searchByDate.value ? date.formatDate(new Date(daterange_filter.value.to), 'X') : '',
   })
 }
 

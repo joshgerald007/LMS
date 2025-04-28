@@ -21,6 +21,17 @@ export function list(url) {
     })
 }
 
+export function collection(url) {
+  return api
+    .get(`${apiUrl}api/v1/${url}/get/collection`, config)
+    .then((response) => {
+      return response
+    })
+    .catch(() => {
+      return 'error'
+    })
+}
+
 export function exports(url) {
   return api
     .get(`${apiUrl}api/v1/${url}/export`, config)

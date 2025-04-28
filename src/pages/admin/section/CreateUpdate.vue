@@ -1,33 +1,14 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">{{ AddorEdit }} Course</div>
+      <div class="text-h6">{{ AddorEdit }} Section</div>
     </q-card-section>
 
     <q-separator />
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Code" v-model="course.code" />
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-input outlined dense label="Name" v-model="course.name" />
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-select
-            outlined
-            dense
-            label="Faculty"
-            v-model="course.faculty_id"
-            emit-value
-            map-options
-            :options="facultyList"
-          >
-          </q-select>
+          <q-input outlined dense label="Name" v-model="section.name" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -37,8 +18,13 @@
             dense
             label="Description"
             type="textarea"
-            v-model="course.description"
+            v-model="section.description"
           />
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
+          <q-input type="number" outlined dense label="Capacity" v-model="section.capacity" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -53,7 +39,7 @@
               { label: 'Active', value: 1 },
               { label: 'Inactive', value: 0 },
             ]"
-            v-model="course.is_active"
+            v-model="section.is_active"
           />
         </q-item-section>
       </q-item>
@@ -70,7 +56,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { collection } from 'boot/get.js'
 import { add } from 'boot/post.js'
 import { edit } from 'boot/put.js'
 import { Loading } from 'quasar'
@@ -90,9 +75,10 @@ const AddorEdit = computed(() => {
   return 'Add'
 })
 
-const course = ref({
+const section = ref({
   name: '',
   description: '',
+  capacity: '',
   is_active: 1,
 })
 
@@ -101,13 +87,13 @@ const emit = defineEmits(['getData', 'closeModal'])
 async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
-    const result = await add('course', course.value)
+    const result = await add('sections', section.value)
     if (!result.error) {
       emit('getData')
       emit('closeModal')
     }
   } else if (AddorEdit.value === 'Edit') {
-    const result = await edit('course', props.value.value.id, course.value)
+    const result = await edit('sections', props.value.value.id, section.value)
     if (!result.error) {
       emit('getData')
       emit('closeModal')
@@ -116,27 +102,12 @@ async function submit() {
   Loading.hide()
 }
 
-let facultyList = ref([])
-
-async function getFaculty() {
-  const f = await collection('faculties', course.value)
-  const result = f?.data?.result
-  if (result) {
-    facultyList.value = result.map((x) => {
-      return { label: x.name, value: x.id }
-    })
-  }
-}
-
 onMounted(() => {
   if (AddorEdit.value === 'Edit') {
-    course.value.code = props.value.value.code
-    course.value.name = props.value.value.name
-    course.value.description = props.value.value.description
-    course.value.faculty_id = props.value.value.faculty_id
-    course.value.is_active = props.value.value.is_active
+    section.value.name = props.value.value.name
+    section.value.description = props.value.value.description
+    section.value.capacity = props.value.value.capacity
+    section.value.is_active = props.value.value.is_active
   }
-
-  getFaculty()
 })
 </script>

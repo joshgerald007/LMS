@@ -18,7 +18,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this section?</span>
+          <span class="q-ml-sm">Are you sure you want to delete this room?</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -48,13 +48,6 @@ const columns = [
     label: 'Name',
     align: 'left',
     field: 'name',
-    sortable: true,
-  },
-  {
-    name: 'capacity',
-    label: 'Capacity',
-    align: 'left',
-    field: 'capacity',
     sortable: true,
   },
   {
@@ -113,7 +106,7 @@ async function getData(filter = {}) {
 
   loading.value = true
   const result = await list(
-    `sections?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+    `rooms?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
   )
   loading.value = false
   data.value = result?.data?.result || []
@@ -122,7 +115,7 @@ async function getData(filter = {}) {
 }
 
 async function getExport() {
-  const result = await exports(`sections`)
+  const result = await exports(`rooms`)
   console.log(result)
 }
 </script>

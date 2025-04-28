@@ -67,6 +67,19 @@ const columns = [
     sortable: true,
   },
   {
+    name: 'is_active',
+    label: 'Status',
+    align: 'left',
+    field: (row) => {
+      if (row.is_active) {
+        return { label: 'Active', badgeColor: 'green' }
+      }
+      return { label: 'Inactive', badgeColor: 'red' }
+    },
+    sortable: true,
+    tag: 'badge',
+  },
+  {
     name: 'Actions',
     label: 'Actions',
     align: 'left',

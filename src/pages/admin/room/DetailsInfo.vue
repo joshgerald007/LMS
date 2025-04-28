@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">Course Details</div>
+      <div class="text-h6">Room Details</div>
     </q-card-section>
 
     <q-separator />
@@ -9,29 +9,9 @@
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
-          <q-field outlined label="Code" stack-label readonly>
-            <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">{{ course.code }}</div>
-            </template>
-          </q-field>
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
           <q-field outlined label="Name" stack-label readonly>
             <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">{{ course.name }}</div>
-            </template>
-          </q-field>
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-field outlined label="Faculty" stack-label readonly>
-            <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">
-                {{ course.faculty }}
-              </div>
+              <div class="self-center full-width no-outline" tabindex="0">{{ room.name }}</div>
             </template>
           </q-field>
         </q-item-section>
@@ -41,7 +21,7 @@
           <q-field outlined label="Description" stack-label readonly>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                {{ course.description }}
+                {{ room.description }}
               </div>
             </template>
           </q-field>
@@ -52,7 +32,7 @@
           <q-field outlined label="Status" stack-label readonly>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                <q-badge color="green" label="Active" v-if="course.is_active" />
+                <q-badge color="green" label="Active" v-if="room.is_active" />
                 <q-badge color="red" label="Inactive" v-else />
               </div>
             </template>
@@ -79,17 +59,15 @@ const props = defineProps({
   },
 })
 
-const course = ref({
+const room = ref({
   name: '',
   description: '',
   is_active: 1,
 })
 
 onMounted(() => {
-  course.value.code = props.value.value.code
-  course.value.name = props.value.value.name
-  course.value.description = props.value.value.description
-  course.value.faculty = props.value.value.faculty.name
-  course.value.is_active = props.value.value.is_active
+  room.value.name = props.value.value.name
+  room.value.description = props.value.value.description
+  room.value.is_active = props.value.value.is_active
 })
 </script>

@@ -30,14 +30,14 @@ const routes = [
         component: import('pages/admin/section/SectionList.vue'),
       },
       {
+        path: '/admin/room',
+        name: 'Room',
+        component: import('pages/admin/room/RoomList.vue'),
+      },
+      {
         path: '/admin/subject',
         name: 'Subject',
         component: import('pages/admin/subject/SubjectList.vue'),
-      },
-      {
-        path: '/admin/teacher',
-        name: 'Teacher',
-        component: import('pages/admin/teacher/TeacherList.vue'),
       },
       {
         path: '/admin/schedule',

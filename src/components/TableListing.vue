@@ -35,6 +35,7 @@
             :model-value="`${dateRange.from} - ${dateRange.to}`"
             style="width: calc(50% - 90px); margin-right: 20px; min-width: 180px"
             :disable="!searchByDate"
+            class="q-pa-xs"
           >
             <template v-slot:prepend>
               <q-icon
@@ -67,7 +68,7 @@
               </q-icon>
             </template>
           </q-input>
-          <q-btn style="width: 80px" color="primary" label="Search" @click="searchData()" />
+          <q-btn style="width: 80px" dense color="primary" label="Search" @click="searchData()" />
         </div>
 
         <div class="q-table__separator col"></div>

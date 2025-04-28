@@ -1,193 +1,129 @@
 <template>
-  <q-page class="q-mt-md">
-    <div class="q-pa-md">
-      <q-table
-        class="my-sticky-virtscroll-table"
-        virtual-scroll
-        flat
-        bordered
-        v-model:pagination="pagination"
-        :rows-per-page-options="[0]"
-        :virtual-scroll-sticky-size-start="48"
-        row-key="index"
-        title="Subject"
-        :rows="rows"
-        :columns="columns"
-      />
-    </div>
-  </q-page>
+  <table-listing
+    :columns="columns"
+    :data="data"
+    :name="route.name"
+    :loading="loading"
+    ref="tl"
+    @getData="getData"
+    @getExport="getExport"
+  >
+    <template #create-update-modal="a">
+      <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
+    </template>
+    <template #details-info-modal="a">
+      <DetailsInfo :value="a" />
+    </template>
+    <template #confirm-delete-modal="a">
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
+          <span class="q-ml-sm">Are you sure you want to delete this subject?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Yes" color="primary" @click="deleteItem(a.value.id)" />
+          <q-btn flat label="No" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </template>
+  </table-listing>
 </template>
 
 <script setup>
-import { date } from 'quasar'
+import { ref } from 'vue'
+import TableListing from '../../../components/TableListing.vue'
+import CreateUpdate from './CreateUpdate.vue'
+import DetailsInfo from './DetailsInfo.vue'
+import { useRoute } from 'vue-router'
+import { list, exports } from 'boot/get.js'
+import { del } from 'boot/delete.js'
+import { Loading } from 'quasar'
+
+const route = useRoute()
 
 const columns = [
   {
-    name: 'StudentID',
-    label: 'Course ID',
+    name: 'code',
+    label: 'Code',
     align: 'left',
-    field: 'StudentID',
+    field: 'code',
     sortable: true,
   },
   {
-    name: 'Name',
+    name: 'name',
     label: 'Name',
     align: 'left',
-    field: 'Name',
+    field: 'name',
     sortable: true,
   },
   {
-    name: 'Gender',
+    name: 'unit',
+    label: 'Unit',
     align: 'left',
-    label: 'Gender',
-    field: (row) => (row.Gender === 'M' ? 'Male' : 'Female'),
+    field: 'units',
     sortable: true,
   },
   {
-    name: 'Birthdate',
+    name: 'price_per_unit',
+    label: 'Price per Unit',
     align: 'left',
-    label: 'Birthdate',
-    field: (row) => date.formatDate(row.Birthdate, 'MMMM DD,YYYY'),
+    field: 'price_per_unit',
     sortable: true,
   },
   {
-    name: 'Age',
+    name: 'Actions',
+    label: 'Actions',
     align: 'left',
-    label: 'Age',
-    field: (row) => date.getDateDiff(new Date(), row.Birthdate, 'years'),
-    sortable: true,
-  },
-  {
-    name: 'Course',
-    align: 'left',
-    label: 'Course',
-    field: 'Course',
-    sortable: true,
-  },
-  {
-    name: 'Year',
-    align: 'left',
-    label: 'Year',
-    field: (row) => `${numberPlace(row.Year)} Year`,
-    sortable: true,
-  },
-  {
-    name: 'Section',
-    align: 'left',
-    label: 'Section',
-    field: 'Section',
+    field: 'Actions',
     sortable: true,
   },
 ]
 
-function numberPlace(n) {
-  if (n === 1) {
-    return '1st'
-  }
+const tl = ref(null)
 
-  if (n === 2) {
-    return '2nd'
+async function deleteItem(id) {
+  Loading.show()
+  const result = await del('subject', id)
+  Loading.hide()
+  if (result.status === 200) {
+    tl.value.closeModal()
+    getData()
   }
-
-  if (n === 3) {
-    return '3rd'
-  }
-
-  return `${n}th`
 }
 
-const seed = [
-  {
-    StudentID: '00001',
-    Name: 'Josh Gerald Gugol',
-    Gender: 'M',
-    Birthdate: '1991-11-07',
-    Course: 'BS Computer Science',
-    Year: 3,
-    Section: 'BSCS-101',
-  },
-  {
-    StudentID: '00002',
-    Name: 'Apollo Malapote',
-    Gender: 'M',
-    Birthdate: '1991-11-07',
-    Course: 'BS Information Technology',
-    Year: 4,
-    Section: 'BSCS-403',
-  },
-  {
-    StudentID: '00003',
-    Name: 'Edbert Guinto',
-    Gender: 'M',
-    Birthdate: '1991-11-07',
-    Course: 'BS Computer Science',
-    Year: 2,
-    Section: 'BSCS-101',
-  },
-  {
-    StudentID: '00004',
-    Name: 'Rica Flores',
-    Gender: 'F',
-    Birthdate: '1991-11-07',
-    Course: 'BS Computer Science',
-    Year: 3,
-    Section: 'BSCS-101',
-  },
-  {
-    StudentID: '00005',
-    Name: 'Donnie Ray Sadim',
-    Gender: 'F',
-    Birthdate: '1991-11-07',
-    Course: 'BS Computer Science',
-    Year: 3,
-    Section: 'BSCS-101',
-  },
-  {
-    StudentID: '00006',
-    Name: 'Anica Zoe Gugol',
-    Gender: 'F',
-    Birthdate: '1991-11-07',
-    Course: 'BS Computer Science',
-    Year: 3,
-    Section: 'BSCS-101',
-  },
-]
+const data = ref([])
+const loading = ref(false)
 
-// we generate lots of rows here
-let rows = []
-for (let i = 0; i < 1000; i++) {
-  rows = rows.concat(seed.slice(0).map((r) => ({ ...r })))
+async function getData(filter = {}) {
+  let start = ''
+  let end = ''
+  let sBy = ''
+  let oBy = ''
+  if (filter.start) {
+    start = `&start=${filter.start}`
+  }
+  if (filter.end) {
+    end = `&end=${filter.end}`
+  }
+
+  if (filter?.page?.sortBy) {
+    sBy = `&order_by=${filter.page.sortBy}`
+    oBy = `&direction=${filter.page.descending ? 'asc' : 'desc'}`
+  }
+
+  loading.value = true
+  const result = await list(
+    `subjects?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+  )
+  loading.value = false
+  data.value = result?.data?.result || []
+  data.value.sortBy = filter.page?.sortBy
+  data.value.descending = filter.page?.descending
 }
-rows.forEach((row, index) => {
-  row.index = index
-})
+
+async function getExport() {
+  const result = await exports(`subjects`)
+  console.log(result)
+}
 </script>
-
-<style scoped lang="scss">
-.my-sticky-virtscroll-table {
-  height: 410px;
-
-  .q-table__top,
-  .q-table__bottom,
-  thead tr:first-child th {
-    background-color: #00b4ff;
-  }
-
-  thead tr th {
-    position: sticky;
-    z-index: 1;
-  }
-
-  thead tr:last-child th {
-    top: 48px;
-  }
-
-  thead tr:first-child th {
-    top: 0;
-  }
-
-  tbody {
-    scroll-margin-top: 48px;
-  }
-}
-</style>

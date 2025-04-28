@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">Course Details</div>
+      <div class="text-h6">subject Details</div>
     </q-card-section>
 
     <q-separator />
@@ -11,7 +11,7 @@
         <q-item-section justify-center>
           <q-field outlined label="Code" stack-label readonly>
             <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">{{ course.code }}</div>
+              <div class="self-center full-width no-outline" tabindex="0">{{ subject.code }}</div>
             </template>
           </q-field>
         </q-item-section>
@@ -20,17 +20,28 @@
         <q-item-section justify-center>
           <q-field outlined label="Name" stack-label readonly>
             <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">{{ course.name }}</div>
+              <div class="self-center full-width no-outline" tabindex="0">{{ subject.name }}</div>
             </template>
           </q-field>
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section justify-center>
-          <q-field outlined label="Faculty" stack-label readonly>
+          <q-field outlined label="Units" stack-label readonly>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                {{ course.faculty }}
+                {{ subject.units }}
+              </div>
+            </template>
+          </q-field>
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
+          <q-field outlined label="Price per Unit" stack-label readonly>
+            <template v-slot:control>
+              <div class="self-center full-width no-outline" tabindex="0">
+                {{ subject.price_per_unit }}
               </div>
             </template>
           </q-field>
@@ -41,19 +52,7 @@
           <q-field outlined label="Description" stack-label readonly>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                {{ course.description }}
-              </div>
-            </template>
-          </q-field>
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-field outlined label="Status" stack-label readonly>
-            <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">
-                <q-badge color="green" label="Active" v-if="course.is_active" />
-                <q-badge color="red" label="Inactive" v-else />
+                {{ subject.description }}
               </div>
             </template>
           </q-field>
@@ -79,17 +78,19 @@ const props = defineProps({
   },
 })
 
-const course = ref({
+const subject = ref({
+  code: '',
   name: '',
   description: '',
-  is_active: 1,
+  units: '',
+  price_per_unit: '',
 })
 
 onMounted(() => {
-  course.value.code = props.value.value.code
-  course.value.name = props.value.value.name
-  course.value.description = props.value.value.description
-  course.value.faculty = props.value.value.faculty.name
-  course.value.is_active = props.value.value.is_active
+  subject.value.code = props.value.value.code
+  subject.value.name = props.value.value.name
+  subject.value.description = props.value.value.description
+  subject.value.units = props.value.value.units
+  subject.value.price_per_unit = props.value.value.price_per_unit
 })
 </script>

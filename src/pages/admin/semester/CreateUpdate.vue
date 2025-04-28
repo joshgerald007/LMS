@@ -98,7 +98,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { add } from 'boot/post.js'
 import { edit } from 'boot/put.js'
-import { Loading } from 'quasar'
+import { Loading, Notify } from 'quasar'
 
 const props = defineProps({
   value: {
@@ -128,14 +128,30 @@ async function submit() {
   if (AddorEdit.value === 'Add') {
     const result = await add('semesters', semester.value)
     if (!result.error) {
+      Notify.create({
+        message: 'Successfully add a semsester',
+        position: 'top-right',
+        color: 'green',
+        timeout: 2000,
+      })
       emit('getData')
       emit('closeModal')
+    } else {
+      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
     }
   } else if (AddorEdit.value === 'Edit') {
     const result = await edit('semesters', props.value.value.id, semester.value)
     if (!result.error) {
+      Notify.create({
+        message: 'Successfully edit a semester',
+        position: 'top-right',
+        color: 'green',
+        timeout: 2000,
+      })
       emit('getData')
       emit('closeModal')
+    } else {
+      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
     }
   }
   Loading.hide()

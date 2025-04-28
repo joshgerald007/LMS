@@ -38,7 +38,7 @@ import DetailsInfo from './DetailsInfo.vue'
 import { useRoute } from 'vue-router'
 import { list, exports } from 'boot/get.js'
 import { del } from 'boot/delete.js'
-import { Loading } from 'quasar'
+import { Loading, Notify } from 'quasar'
 
 const route = useRoute()
 
@@ -123,6 +123,20 @@ async function getData(filter = {}) {
 
 async function getExport() {
   const result = await exports(`sections`)
-  console.log(result)
+  if (result.status === 200) {
+    Notify.create({
+      message: 'Successfully export an excel',
+      position: 'top-right',
+      color: 'green',
+      timeout: 2000,
+    })
+  } else {
+    Notify.create({
+      message: result.data.message,
+      position: 'top-right',
+      color: 'red',
+      timeout: 2000,
+    })
+  }
 }
 </script>

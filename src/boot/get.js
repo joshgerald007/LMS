@@ -34,7 +34,7 @@ export function collection(url) {
 
 export function exports(url) {
   return api
-    .get(`${apiUrl}api/v1/${url}/export`, config)
+    .get(`${apiUrl}api/v1/${url}/export/xls`, config)
     .then((response) => {
       return response
     })

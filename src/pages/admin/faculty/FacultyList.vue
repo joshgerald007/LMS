@@ -108,6 +108,9 @@ async function getData(filter = {}) {
   if (filter?.page?.sortBy) {
     sBy = `&order_by=${filter.page.sortBy}`
     oBy = `&direction=${filter.page.descending ? 'asc' : 'desc'}`
+  } else {
+    sBy = `&order_by=created_at`
+    oBy = `&direction=desc`
   }
 
   loading.value = true

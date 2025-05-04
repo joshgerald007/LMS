@@ -2,8 +2,7 @@
   <div class="q-pb-sm">
     <q-breadcrumbs>
       <q-breadcrumbs-el label="Home" />
-      <q-breadcrumbs-el label="Manage Course" />
-      <q-breadcrumbs-el label="Section" />
+      <q-breadcrumbs-el label="Teacher" />
     </q-breadcrumbs>
   </div>
   <table-listing
@@ -25,7 +24,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this section?</span>
+          <span class="q-ml-sm">Are you sure you want to delete this teacher?</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -51,38 +50,32 @@ const route = useRoute()
 
 const columns = [
   {
-    name: 'name',
-    label: 'Name',
+    name: 'first_name',
+    label: 'First Name',
     align: 'left',
-    field: 'name',
+    field: 'first_name',
     sortable: true,
   },
   {
-    name: 'capacity',
-    label: 'Capacity',
+    name: 'last_name',
+    label: 'Last Name',
     align: 'left',
-    field: 'capacity',
+    field: 'last_name',
     sortable: true,
   },
   {
-    name: 'is_active',
-    label: 'Status',
+    name: 'email',
+    label: 'Email',
     align: 'left',
-    field: (row) => {
-      if (row.is_active) {
-        return { label: 'Active', badgeColor: 'green' }
-      }
-      return { label: 'Inactive', badgeColor: 'red' }
-    },
+    field: 'email',
     sortable: true,
-    tag: 'badge',
   },
   {
     name: 'Actions',
     label: 'Actions',
     align: 'left',
     field: 'Actions',
-    sortable: true,
+    sortable: false,
   },
 ]
 
@@ -90,7 +83,7 @@ const tl = ref(null)
 
 async function deleteItem(id) {
   Loading.show()
-  const result = await del('course', id)
+  const result = await del('teachers', id)
   Loading.hide()
   if (result.status === 200) {
     tl.value.closeModal()
@@ -123,7 +116,7 @@ async function getData(filter = {}) {
 
   loading.value = true
   const result = await list(
-    `sections?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+    `teachers?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
   )
   loading.value = false
   data.value = result?.data?.result || []
@@ -132,7 +125,7 @@ async function getData(filter = {}) {
 }
 
 async function getExport() {
-  const result = await exports(`sections`)
+  const result = await exports(`teachers`)
   if (result.status === 200) {
     Notify.create({
       message: 'Successfully export an excel',

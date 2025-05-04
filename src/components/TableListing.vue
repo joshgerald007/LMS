@@ -136,7 +136,10 @@
                 {{ props.cols.find((x) => x.name === f).value }}
               </template>
             </q-td>
-            <q-td v-else style="width: 350px">
+            <q-td
+              v-else
+              v-bind:style="!!slots['custom-action'] ? { width: '480px' } : { width: '350px' }"
+            >
               <q-btn
                 color="info"
                 label="Details"
@@ -146,6 +149,7 @@
                 icon="mdi-file-document-outline"
               />
               <q-btn
+                v-if="!!slots['create-update-modal']"
                 color="warning text-black"
                 label="Edit"
                 class="q-mr-md"
@@ -154,6 +158,7 @@
                 icon="edit_square"
               />
               <q-btn
+                v-if="!!slots['confirm-delete-modal']"
                 color="red"
                 label="Delete"
                 class="q-mr-md"
@@ -161,6 +166,8 @@
                 icon="delete"
                 @click="toDelete(props.row)"
               />
+
+              <slot name="custom-action" :value="props.row"></slot>
             </q-td>
           </template>
         </q-tr>

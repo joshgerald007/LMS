@@ -144,6 +144,13 @@ const linksList = [
     link: '/admin/subject',
   },
   {
+    icon: 'mdi-human-male-board',
+    label: 'Teacher',
+    name: 'Teacher',
+    separator: false,
+    link: '/admin/teacher',
+  },
+  {
     icon: 'mdi-book-clock',
     label: 'Schedule',
     name: 'Schedule',

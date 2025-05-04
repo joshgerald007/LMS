@@ -1,59 +1,40 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">{{ AddorEdit }} Course</div>
+      <div class="text-h6">{{ AddorEdit }} Teacher</div>
     </q-card-section>
 
     <q-separator />
+
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Code" v-model="course.code" />
+          <q-input outlined dense label="First Name" v-model="teacher.first_name" />
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Name" v-model="course.name" />
+          <q-input outlined dense label="Last Name" v-model="teacher.last_name" />
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section justify-center>
-          <q-select
-            outlined
-            dense
-            label="Faculty"
-            v-model="course.faculty_id"
-            emit-value
-            map-options
-            :options="facultyList"
-          >
-          </q-select>
+          <q-input outlined dense label="Email" v-model="teacher.email" />
         </q-item-section>
       </q-item>
-      <q-item>
+      <q-item v-if="AddorEdit === 'Add'">
+        <q-item-section justify-center>
+          <q-input outlined type="password" dense label="Password" v-model="teacher.password" />
+        </q-item-section>
+      </q-item>
+      <q-item v-if="AddorEdit === 'Add'">
         <q-item-section justify-center>
           <q-input
             outlined
+            type="password"
             dense
-            label="Description"
-            type="textarea"
-            v-model="course.description"
-          />
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-select
-            outlined
-            dense
-            label="Status"
-            emit-value
-            map-options
-            :options="[
-              { label: 'Active', value: 1 },
-              { label: 'Inactive', value: 0 },
-            ]"
-            v-model="course.is_active"
+            label="Confirm Password"
+            v-model="teacher.confirm_password"
           />
         </q-item-section>
       </q-item>
@@ -70,7 +51,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { collection } from 'boot/get.js'
 import { add } from 'boot/post.js'
 import { edit } from 'boot/put.js'
 import { Loading, Notify } from 'quasar'
@@ -90,10 +70,12 @@ const AddorEdit = computed(() => {
   return 'Add'
 })
 
-const course = ref({
-  name: '',
-  description: '',
-  is_active: 1,
+const teacher = ref({
+  first_name: '',
+  last_name: '',
+  email: '',
+  password: '',
+  confirm_password: 1,
 })
 
 const emit = defineEmits(['getData', 'closeModal'])
@@ -101,10 +83,10 @@ const emit = defineEmits(['getData', 'closeModal'])
 async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
-    const result = await add('course', course.value)
+    const result = await add('teachers', teacher.value)
     if (!result.error) {
       Notify.create({
-        message: 'Successfully add a course',
+        message: 'Successfully add a teacher',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -115,10 +97,10 @@ async function submit() {
       Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
     }
   } else if (AddorEdit.value === 'Edit') {
-    const result = await edit('course', props.value.value.id, course.value)
+    const result = await edit('teachers', props.value.value.id, teacher.value)
     if (!result.error) {
       Notify.create({
-        message: 'Successfully edit a course',
+        message: 'Successfully edit a teacher',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -132,27 +114,13 @@ async function submit() {
   Loading.hide()
 }
 
-let facultyList = ref([])
-
-async function getFaculty() {
-  const f = await collection('faculties')
-  const result = f?.data?.result
-  if (result) {
-    facultyList.value = result.map((x) => {
-      return { label: x.name, value: x.id }
-    })
-  }
-}
-
 onMounted(() => {
   if (AddorEdit.value === 'Edit') {
-    course.value.code = props.value.value.code
-    course.value.name = props.value.value.name
-    course.value.description = props.value.value.description
-    course.value.faculty_id = props.value.value.faculty_id
-    course.value.is_active = props.value.value.is_active
+    teacher.value.first_name = props.value.value.first_name
+    teacher.value.last_name = props.value.value.last_name
+    teacher.value.email = props.value.value.email
+    teacher.value.password = ''
+    teacher.value.confirm_password = ''
   }
-
-  getFaculty()
 })
 </script>

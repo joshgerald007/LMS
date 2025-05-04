@@ -45,14 +45,24 @@ const routes = [
         component: import('pages/admin/subject/SubjectList.vue'),
       },
       {
-        path: '/admin/schedule',
-        name: 'Schedule',
-        component: import('pages/admin/schedule/ScheduleList.vue'),
+        path: '/admin/teacher',
+        name: 'Teacher',
+        component: import('pages/admin/teacher/TeacherList.vue'),
       },
       {
         path: '/admin/faculty',
         name: 'Faculty',
         component: import('pages/admin/faculty/FacultyList.vue'),
+      },
+      {
+        path: '/admin/schedule',
+        name: 'Schedule ',
+        component: import('pages/admin/schedule/ScheduleList.vue'),
+      },
+      {
+        path: '/admin/schedule/:id',
+        name: 'Schedule',
+        component: import('pages/admin/schedule/ScheduleList.vue'),
       },
     ],
   },

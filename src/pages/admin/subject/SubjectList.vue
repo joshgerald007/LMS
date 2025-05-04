@@ -14,6 +14,16 @@
     @getData="getData"
     @getExport="getExport"
   >
+    <template #custom-action="a">
+      <q-btn
+        label="Schedule"
+        color="green"
+        class="q-mr-md"
+        size="sm"
+        icon="mdi-format-list-text"
+        @click="router.push({ path: `/admin/schedule/${a.value.id}` })"
+      ></q-btn>
+    </template>
     <template #create-update-modal="a">
       <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
     </template>
@@ -41,12 +51,13 @@ import { ref } from 'vue'
 import TableListing from '../../../components/TableListing.vue'
 import CreateUpdate from './CreateUpdate.vue'
 import DetailsInfo from './DetailsInfo.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { list, exports } from 'boot/get.js'
 import { del } from 'boot/delete.js'
 import { Loading, Notify } from 'quasar'
 
 const route = useRoute()
+const router = useRouter()
 
 const columns = [
   {
@@ -116,6 +127,9 @@ async function getData(filter = {}) {
   if (filter?.page?.sortBy) {
     sBy = `&order_by=${filter.page.sortBy}`
     oBy = `&direction=${filter.page.descending ? 'asc' : 'desc'}`
+  } else {
+    sBy = `&order_by=created_at`
+    oBy = `&direction=desc`
   }
 
   loading.value = true

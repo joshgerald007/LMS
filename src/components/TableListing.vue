@@ -20,7 +20,7 @@
           <q-input
             outlined
             dense
-            style="width: calc(50% - 70px); margin-right: 20px; min-width: 180px"
+            style="width: 180px; margin-right: 20px; min-width: 180px"
             label="Search"
             v-model="searchValue"
             @keyup.enter="searchData()"
@@ -33,29 +33,18 @@
               v-if="filteringShow"
             >
               <q-card class="q-py-xs" style="width: 300px">
-                <q-item>
-                  <q-item-section justify-center>
-                    <q-select
-                      outlined
-                      dense
-                      label="Status"
-                      emit-value
-                      map-options
-                      v-model="status_filter"
-                      :options="[
-                        { label: 'Active', value: 1 },
-                        { label: 'Inactive', value: 0 },
-                      ]"
-                    />
-                  </q-item-section>
-                </q-item>
+                <slot name="advance-filter" :value="selectedValue"></slot>
 
                 <q-item>
                   <q-item-section justify-center>
                     <q-input
+                      clearable
+                      @clear="daterange_filter = null"
                       outlined
                       dense
-                      :model-value="`${daterange_filter.from} - ${daterange_filter.to}`"
+                      :model-value="
+                        daterange_filter ? `${daterange_filter.from} - ${daterange_filter.to}` : ''
+                      "
                       label="Created Date"
                     >
                       <template v-slot:append>
@@ -74,10 +63,18 @@
                 </q-item>
 
                 <q-item>
-                  <q-btn size="sm" dense style="height: 25px" color="primary" class="q-px-sm">
+                  <q-btn
+                    size="sm"
+                    dense
+                    style="height: 25px"
+                    color="primary"
+                    class="q-px-sm"
+                    @click="filteringShow = false"
+                  >
                     Close
                   </q-btn>
                   <q-btn
+                    @click="clearFilter()"
                     size="sm"
                     dense
                     style="height: 25px"
@@ -97,10 +94,42 @@
             </template>
           </q-input>
 
+          <q-field
+            outlined
+            dense
+            style="width: 180px; margin-right: 20px; min-width: 180px"
+            label="Crated Date"
+            model-value="''"
+            readonly
+            v-if="daterange_filter"
+          >
+            <template v-slot:control>
+              <div class="self-center full-width no-outline" tabindex="0">
+                {{ daterange_filter ? `${daterange_filter.from} - ${daterange_filter.to}` : '' }}
+              </div>
+            </template>
+          </q-field>
+
+          <template v-for="(a, k) in advfilter" :key="k">
+            <q-field
+              outlined
+              dense
+              style="width: 180px; margin-right: 20px; min-width: 180px"
+              :label="k === 'is_active' ? 'Status' : k"
+              model-value="''"
+              readonly
+              v-if="a"
+            >
+              <template v-slot:control>
+                <div class="self-center full-width no-outline" tabindex="0">
+                  {{ k === 'is_active' ? (a ? 'Active' : 'Inactive') : a }}
+                </div>
+              </template>
+            </q-field>
+          </template>
+
           <q-btn style="width: 80px" dense color="primary" label="Search" @click="searchData()" />
         </div>
-
-        <div class="q-table__separator col"></div>
 
         <div class="q-table__control">
           <q-btn
@@ -141,6 +170,7 @@
               v-bind:style="!!slots['custom-action'] ? { width: '480px' } : { width: '350px' }"
             >
               <q-btn
+                v-if="!!slots['details-info-modal']"
                 color="info"
                 label="Details"
                 class="q-mr-md"
@@ -202,12 +232,7 @@ const tableRef = ref()
 
 const filteringShow = ref(false)
 
-const status_filter = ref()
-const daterange_filter = ref({
-  from: date.formatDate(new Date(), 'YYYY/MM/DD'),
-  to: date.formatDate(new Date(), 'YYYY/MM/DD'),
-})
-const searchByDate = ref(false)
+const daterange_filter = ref(null)
 
 const props = defineProps({
   columns: {
@@ -225,6 +250,10 @@ const props = defineProps({
   loading: {
     type: Boolean,
     required: true,
+  },
+  advfilter: {
+    type: Object,
+    required: false,
   },
 })
 
@@ -254,6 +283,11 @@ function closeModal() {
   confirmModal.value = false
 }
 
+function clearFilter() {
+  daterange_filter.value = null
+  emit('clearFilter')
+}
+
 const paging = computed(() => {
   return {
     rowsPerPage: props.data?.per_page || 10,
@@ -267,11 +301,14 @@ const paging = computed(() => {
 const emit = defineEmits(['getData'])
 
 function searchData(p = null) {
+  filteringShow.value = false
   emit('getData', {
     page: p ? p.pagination : paging.value,
     search: searchValue.value,
-    start: searchByDate.value ? date.formatDate(new Date(daterange_filter.value.from), 'X') : '',
-    end: searchByDate.value ? date.formatDate(new Date(daterange_filter.value.to), 'X') : '',
+    start: daterange_filter.value
+      ? date.formatDate(new Date(daterange_filter.value.from), 'X')
+      : '',
+    end: daterange_filter.value ? date.formatDate(new Date(daterange_filter.value.to), 'X') : '',
   })
 }
 

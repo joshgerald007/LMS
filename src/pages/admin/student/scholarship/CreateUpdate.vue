@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">{{ AddorEdit }} School Year</div>
+      <div class="text-h6">{{ AddorEdit }} Scholarship</div>
     </q-card-section>
 
     <q-separator />
@@ -9,7 +9,7 @@
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Name" v-model="schoolyear.name" />
+          <q-input outlined dense label="Name" v-model="scholarship.name" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -19,23 +19,7 @@
             dense
             label="Description"
             type="textarea"
-            v-model="schoolyear.description"
-          />
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-select
-            outlined
-            dense
-            label="Status"
-            emit-value
-            map-options
-            :options="[
-              { label: 'Active', value: 1 },
-              { label: 'Inactive', value: 0 },
-            ]"
-            v-model="schoolyear.is_active"
+            v-model="scholarship.description"
           />
         </q-item-section>
       </q-item>
@@ -71,10 +55,9 @@ const AddorEdit = computed(() => {
   return 'Add'
 })
 
-const schoolyear = ref({
+const scholarship = ref({
   name: '',
   description: '',
-  is_active: 1,
 })
 
 const emit = defineEmits(['getData', 'closeModal'])
@@ -82,8 +65,8 @@ const emit = defineEmits(['getData', 'closeModal'])
 async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
-    const result = await add('school-years', schoolyear.value)
-    if (!result.error) {
+    const result = await add('student/scholarship', scholarship.value)
+    if (result.status === 200) {
       Notify.create({
         message: 'Successfully add a school year',
         position: 'top-right',
@@ -93,11 +76,16 @@ async function submit() {
       emit('getData')
       emit('closeModal')
     } else {
-      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
+      Notify.create({
+        message: result.data.message,
+        position: 'top-right',
+        color: 'red',
+        timeout: 2000,
+      })
     }
   } else if (AddorEdit.value === 'Edit') {
-    const result = await edit('school-years', props.value.value.id, schoolyear.value)
-    if (!result.error) {
+    const result = await edit('student/scholarship', props.value.value.id, scholarship.value)
+    if (result.status === 200) {
       Notify.create({
         message: 'Successfully edit a school year',
         position: 'top-right',
@@ -107,7 +95,12 @@ async function submit() {
       emit('getData')
       emit('closeModal')
     } else {
-      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
+      Notify.create({
+        message: result.data.message,
+        position: 'top-right',
+        color: 'red',
+        timeout: 2000,
+      })
     }
   }
   Loading.hide()
@@ -115,9 +108,8 @@ async function submit() {
 
 onMounted(() => {
   if (AddorEdit.value === 'Edit') {
-    schoolyear.value.name = props.value.value.name
-    schoolyear.value.description = props.value.value.description
-    schoolyear.value.is_active = props.value.value.is_active
+    scholarship.value.name = props.value.value.name
+    scholarship.value.description = props.value.value.description
   }
 })
 </script>

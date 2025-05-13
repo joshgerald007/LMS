@@ -57,6 +57,7 @@
                 dense
                 class="q-py-sm"
                 :hint="passwordValidation || ''"
+                v-on:keyup.enter="loginSubmit()"
               />
             </div>
           </q-card-section>

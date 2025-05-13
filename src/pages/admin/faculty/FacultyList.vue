@@ -10,10 +10,29 @@
     :data="data"
     :name="route.name"
     :loading="loading"
+    :advfilter="adv_filter"
     ref="tl"
     @getData="getData"
     @getExport="getExport"
   >
+    <template #advance-filter="{}">
+      <q-item>
+        <q-item-section justify-center>
+          <q-select
+            outlined
+            dense
+            label="Status"
+            emit-value
+            map-options
+            v-model="adv_filter.is_active"
+            :options="[
+              { label: 'Active', value: 1 },
+              { label: 'Inactive', value: 0 },
+            ]"
+          />
+        </q-item-section>
+      </q-item>
+    </template>
     <template #create-update-modal="a">
       <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
     </template>
@@ -47,6 +66,10 @@ import { del } from 'boot/delete.js'
 import { Loading, Notify } from 'quasar'
 
 const route = useRoute()
+
+const adv_filter = ref({
+  is_active: '',
+})
 
 const columns = [
   {
@@ -114,8 +137,9 @@ async function getData(filter = {}) {
   }
 
   loading.value = true
+  const isactive = adv_filter.value.is_active ? `&is_active=${adv_filter.value.is_active}` : ''
   const result = await list(
-    `faculties?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+    `faculties?search=${filter.search || ''}${isactive}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
   )
   loading.value = false
   data.value = result?.data?.result || []

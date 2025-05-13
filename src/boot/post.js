@@ -16,7 +16,7 @@ export function add(url, param) {
     .then((response) => {
       return response
     })
-    .catch(() => {
-      return 'error'
+    .catch((response) => {
+      return response.response
     })
 }

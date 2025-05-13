@@ -2,7 +2,8 @@
   <div class="q-pb-sm">
     <q-breadcrumbs>
       <q-breadcrumbs-el label="Home" />
-      <q-breadcrumbs-el label="Subject" />
+      <q-breadcrumbs-el label="Manage Course" />
+      <q-breadcrumbs-el label="School Year" />
     </q-breadcrumbs>
   </div>
   <table-listing
@@ -14,23 +15,25 @@
     ref="tl"
     @getData="getData"
     @getExport="getExport"
+    @clearFilter="clearFilter"
   >
     <template #advance-filter="{}">
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Units" v-model="adv_filter.units" />
+          <q-select
+            outlined
+            dense
+            label="Status"
+            emit-value
+            map-options
+            v-model="adv_filter.is_active"
+            :options="[
+              { label: 'Active', value: 1 },
+              { label: 'Inactive', value: 0 },
+            ]"
+          />
         </q-item-section>
       </q-item>
-    </template>
-    <template #custom-action="a">
-      <q-btn
-        label="Schedule"
-        color="green"
-        class="q-mr-md"
-        size="sm"
-        icon="mdi-format-list-text"
-        @click="router.push({ path: `/admin/schedule/subject/${a.value.id}` })"
-      ></q-btn>
     </template>
     <template #create-update-modal="a">
       <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
@@ -42,7 +45,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this subject?</span>
+          <span class="q-ml-sm">Are you sure you want to delete this school year?</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -56,29 +59,25 @@
 
 <script setup>
 import { ref } from 'vue'
-import TableListing from '../../../components/TableListing.vue'
+import TableListing from '../../../../components/TableListing.vue'
 import CreateUpdate from './CreateUpdate.vue'
 import DetailsInfo from './DetailsInfo.vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { list, exports } from 'boot/get.js'
 import { del } from 'boot/delete.js'
 import { Loading, Notify } from 'quasar'
 
 const route = useRoute()
-const router = useRouter()
 
 const adv_filter = ref({
-  units: '',
+  is_active: '',
 })
 
+function clearFilter() {
+  adv_filter.value.is_active = ''
+}
+
 const columns = [
-  {
-    name: 'code',
-    label: 'Code',
-    align: 'left',
-    field: 'code',
-    sortable: true,
-  },
   {
     name: 'name',
     label: 'Name',
@@ -87,25 +86,24 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'unit',
-    label: 'Unit',
+    name: 'is_active',
+    label: 'Status',
     align: 'left',
-    field: 'units',
+    field: (row) => {
+      if (row.is_active) {
+        return { label: 'Active', badgeColor: 'green' }
+      }
+      return { label: 'Inactive', badgeColor: 'red' }
+    },
     sortable: true,
-  },
-  {
-    name: 'price_per_unit',
-    label: 'Price per Unit',
-    align: 'left',
-    field: 'price_per_unit',
-    sortable: true,
+    tag: 'badge',
   },
   {
     name: 'Actions',
     label: 'Actions',
     align: 'left',
     field: 'Actions',
-    sortable: true,
+    sortable: false,
   },
 ]
 
@@ -113,7 +111,7 @@ const tl = ref(null)
 
 async function deleteItem(id) {
   Loading.show()
-  const result = await del('subject', id)
+  const result = await del('school-years', id)
   Loading.hide()
   if (result.status === 200) {
     tl.value.closeModal()
@@ -145,9 +143,9 @@ async function getData(filter = {}) {
   }
 
   loading.value = true
-  const units = adv_filter.value.units ? `&units=${adv_filter.value.units}` : ''
+  const isactive = adv_filter.value.is_active ? `&is_active=${adv_filter.value.is_active}` : ''
   const result = await list(
-    `subjects?search=${filter.search || ''}${units}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+    `school-years?search=${filter.search || ''}${isactive}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
   )
   loading.value = false
   data.value = result?.data?.result || []
@@ -156,7 +154,7 @@ async function getData(filter = {}) {
 }
 
 async function getExport() {
-  const result = await exports(`subjects`)
+  const result = await exports(`school-years`)
   if (result.status === 200) {
     Notify.create({
       message: 'Successfully export an excel',

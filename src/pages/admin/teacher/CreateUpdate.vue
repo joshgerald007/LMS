@@ -75,7 +75,7 @@ const teacher = ref({
   last_name: '',
   email: '',
   password: '',
-  confirm_password: 1,
+  confirm_password: '',
 })
 
 const emit = defineEmits(['getData', 'closeModal'])
@@ -84,7 +84,7 @@ async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
     const result = await add('teachers', teacher.value)
-    if (!result.error) {
+    if (result.status === 200) {
       Notify.create({
         message: 'Successfully add a teacher',
         position: 'top-right',
@@ -94,11 +94,16 @@ async function submit() {
       emit('getData')
       emit('closeModal')
     } else {
-      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
+      Notify.create({
+        message: result.data.message,
+        position: 'top-right',
+        color: 'red',
+        timeout: 2000,
+      })
     }
   } else if (AddorEdit.value === 'Edit') {
     const result = await edit('teachers', props.value.value.id, teacher.value)
-    if (!result.error) {
+    if (result.status === 200) {
       Notify.create({
         message: 'Successfully edit a teacher',
         position: 'top-right',
@@ -108,7 +113,12 @@ async function submit() {
       emit('getData')
       emit('closeModal')
     } else {
-      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
+      Notify.create({
+        message: result.data.message,
+        position: 'top-right',
+        color: 'red',
+        timeout: 2000,
+      })
     }
   }
   Loading.hide()

@@ -4,26 +4,24 @@
       <q-breadcrumbs-el label="Home" />
       <q-breadcrumbs-el label="Manage Course" />
       <q-breadcrumbs-el label="Schedule" />
-      <q-breadcrumbs-el label="Subject Schedule" />
+      <q-breadcrumbs-el label="Student Schedule" />
     </q-breadcrumbs>
   </div>
   <q-card bordered no-shadow class="q-mb-md" style="box-shadow: none" v-if="route.params.id">
     <q-card-section class="row q-pb-lg q-pt-lg">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div class="text-subtitle1 q-px-md">
-          <div class="q-pb-sm text-weight-medium">Subject Details:</div>
+          <div class="q-pb-sm text-weight-medium">Student Details:</div>
           <div class="row">
             <div class="col-4">
-              Code:<br />
-              Name:<br />
-              Unit:<br />
-              Price per Unit:
+              First Name:<br />
+              Last Name:<br />
+              Email:
             </div>
             <div class="col-4">
-              {{ substud?.data?.result?.code || '--' }}<br />
-              {{ substud?.data?.result?.name || '--' }}<br />
-              {{ substud?.data?.result?.units || '--' }}<br />
-              {{ substud?.data?.result?.price_per_unit || '--' }}
+              {{ student?.data?.result?.first_name || '--' }}<br />
+              {{ student?.data?.result?.last_name || '--' }}<br />
+              {{ student?.data?.result?.email || '--' }}
             </div>
           </div>
           <div class="row">
@@ -41,66 +39,63 @@
         </div>
       </div>
     </q-card-section>
-    <q-dialog v-model="editModal" persistent>
-      <CreateUpdateSubject :value="a" @closeModal="a.closeModal" />
-    </q-dialog>
   </q-card>
-  <table-listing
-    :columns="columns"
-    :data="data"
-    :name="route.name"
-    :loading="loading"
-    :advfilter="adv_filter"
-    ref="tl"
-    @getData="getData"
-    @getExport="getExport"
-  >
-    <template #advance-filter="{}">
-      <q-item>
-        <q-item-section justify-center>
-          <q-select
-            outlined
-            dense
-            label="Status"
-            emit-value
-            map-options
-            v-model="adv_filter.is_active"
-            :options="[
-              { label: 'Active', value: 1 },
-              { label: 'Inactive', value: 0 },
-            ]"
-          />
-        </q-item-section>
-      </q-item>
-    </template>
-    <template #create-update-modal="a" v-if="route.params.id">
-      <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
-    </template>
-    <template #details-info-modal="a">
-      <DetailsInfo :value="a" />
-    </template>
-    <template #confirm-delete-modal="a" v-if="route.params.id">
-      <q-card>
-        <q-card-section class="row items-center">
-          <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this schedule?</span>
-        </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn flat label="Yes" color="primary" @click="deleteItem(a.value.id)" />
-          <q-btn flat label="No" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </template>
-  </table-listing>
+  <q-card class="my-card" flat bordered>
+    <q-card-section>
+      <div class="text-h6">List of Added Schedule</div>
+    </q-card-section>
+    <table-listing
+      :columns="columns"
+      :data="data"
+      :name="route.name"
+      :loading="loading"
+      :advfilter="adv_filter"
+      ref="tl"
+      @getData="getData"
+      @getExport="getExport"
+    >
+      <template #advance-filter="{}">
+        <q-item>
+          <q-item-section justify-center>
+            <q-select
+              outlined
+              dense
+              label="Status"
+              emit-value
+              map-options
+              v-model="adv_filter.is_active"
+              :options="[
+                { label: 'Active', value: 1 },
+                { label: 'Inactive', value: 0 },
+              ]"
+            />
+          </q-item-section>
+        </q-item>
+      </template>
+      <template #confirm-delete-modal="a" v-if="route.params.id">
+        <q-card>
+          <q-card-section class="row items-center">
+            <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
+            <span class="q-ml-sm">Are you sure you want to delete this student schedule?</span>
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="Yes" color="primary" @click="deleteItem(a.value.id)" />
+            <q-btn flat label="No" color="primary" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </template>
+    </table-listing>
+  </q-card>
+  <br />
+  <CreateUpdateSchedule @getData="getData()" />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import TableListing from '../../../components/TableListing.vue'
-import CreateUpdate from './CreateUpdate.vue'
-import CreateUpdateSubject from '../subject/CreateUpdate.vue'
-import DetailsInfo from './DetailsInfo.vue'
+import TableListing from '../../../../components/TableListing.vue'
+import CreateUpdateSchedule from './CreateUpdateSchedule.vue'
 import { useRoute } from 'vue-router'
 import { list, exports, show } from 'boot/get.js'
 import { del } from 'boot/delete.js'
@@ -119,42 +114,43 @@ const columns = [
     name: 'room',
     label: 'Room',
     align: 'left',
-    field: (row) => row.room.name,
+    field: (row) => row.subject_schedule.room.name,
     sortable: true,
   },
   {
     name: 'section',
     label: 'Section',
     align: 'left',
-    field: (row) => row.section.name,
+    field: (row) => row.subject_schedule.section.name,
     sortable: true,
   },
   {
     name: 'teacher',
     label: 'Teacher',
     align: 'left',
-    field: (row) => `${row.teacher.first_name} ${row.teacher.last_name}`,
+    field: (row) =>
+      `${row.subject_schedule.teacher.first_name} ${row.subject_schedule.teacher.last_name}`,
     sortable: true,
   },
   {
     name: 'day',
     label: 'Day',
     align: 'left',
-    field: 'day_of_week',
+    field: (row) => row.subject_schedule.day_of_week,
     sortable: true,
   },
   {
     name: 'start_time',
     label: 'Start Time',
     align: 'left',
-    field: 'start_time',
+    field: (row) => row.subject_schedule.start_time,
     sortable: true,
   },
   {
     name: 'end_time',
     label: 'End Time',
     align: 'left',
-    field: 'end_time',
+    field: (row) => row.subject_schedule.end_time,
     sortable: true,
   },
   {
@@ -170,7 +166,7 @@ const tl = ref(null)
 
 async function deleteItem(id) {
   Loading.show()
-  const result = await del('schedule/subject-schedule', id)
+  const result = await del('student-schedule', id)
   Loading.hide()
   if (result.status === 200) {
     tl.value.closeModal()
@@ -180,7 +176,7 @@ async function deleteItem(id) {
 
 const data = ref([])
 const loading = ref(false)
-const substud = ref({})
+const student = ref({})
 
 async function getData(filter = {}) {
   let start = ''
@@ -200,16 +196,12 @@ async function getData(filter = {}) {
   }
 
   let path = ''
-  if (route.name === 'Schedule') {
-    path = 'schedules/subject-schedule/get/subject'
-  } else {
-    path = `schedules/subject-schedule/subject/${route.params.id}`
-  }
+  path = 'student-schedule/student/'
 
   loading.value = true
   const isactive = adv_filter.value.is_active ? `&is_active=${adv_filter.value.is_active}` : ''
   const result = await list(
-    `${path}?search=${filter.search || ''}${isactive}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+    `${path}${route.params.id}?search=${filter.search || ''}${isactive}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
   )
   loading.value = false
   data.value = result?.data?.result || []
@@ -217,20 +209,20 @@ async function getData(filter = {}) {
   data.value.descending = filter.page?.descending
 }
 
-async function getSubStudDetails() {
+async function getStudentDetails() {
   let result
-  result = await show('subjects', route.params.id)
-  substud.value = result
+  result = await show('student', route.params.id)
+  student.value = result
 }
 
 onMounted(() => {
   if (route.params.id) {
-    getSubStudDetails()
+    getStudentDetails()
   }
 })
 
 async function getExport() {
-  const result = await exports(`schedules/subject-schedule`)
+  const result = await exports(`student-schedule`)
   if (result.status === 200) {
     Notify.create({
       message: 'Successfully export an excel',

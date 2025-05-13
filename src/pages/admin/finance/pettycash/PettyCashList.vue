@@ -2,8 +2,8 @@
   <div class="q-pb-sm">
     <q-breadcrumbs>
       <q-breadcrumbs-el label="Home" />
-      <q-breadcrumbs-el label="Manage Course" />
-      <q-breadcrumbs-el label="School Year" />
+      <q-breadcrumbs-el label="Finance" />
+      <q-breadcrumbs-el label="Petty Cash" />
     </q-breadcrumbs>
   </div>
   <table-listing
@@ -15,6 +15,16 @@
     @getData="getData"
     @getExport="getExport"
   >
+    <template #custom-action="a">
+      <q-btn
+        label="Transaction"
+        color="green"
+        class="q-mr-md"
+        size="sm"
+        icon="mdi-format-list-text"
+        @click="router.push({ path: `/admin/finance/pettycash/transaction/${a.value.id}` })"
+      ></q-btn>
+    </template>
     <template #create-update-modal="a">
       <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
     </template>
@@ -25,7 +35,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this school year?</span>
+          <span class="q-ml-sm">Are you sure you want to delete this petty cash?</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -39,15 +49,16 @@
 
 <script setup>
 import { ref } from 'vue'
-import TableListing from '../../../components/TableListing.vue'
+import TableListing from '../../../../components/TableListing.vue'
 import CreateUpdate from './CreateUpdate.vue'
 import DetailsInfo from './DetailsInfo.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { list, exports } from 'boot/get.js'
 import { del } from 'boot/delete.js'
 import { Loading, Notify } from 'quasar'
 
 const route = useRoute()
+const router = useRouter()
 
 const columns = [
   {
@@ -58,17 +69,11 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'is_active',
-    label: 'Status',
+    name: 'amount',
+    label: 'Amount',
     align: 'left',
-    field: (row) => {
-      if (row.is_active) {
-        return { label: 'Active', badgeColor: 'green' }
-      }
-      return { label: 'Inactive', badgeColor: 'red' }
-    },
+    field: 'amount',
     sortable: true,
-    tag: 'badge',
   },
   {
     name: 'Actions',
@@ -83,7 +88,7 @@ const tl = ref(null)
 
 async function deleteItem(id) {
   Loading.show()
-  const result = await del('school-years', id)
+  const result = await del('finance/petty-cash-fund', id)
   Loading.hide()
   if (result.status === 200) {
     tl.value.closeModal()
@@ -116,7 +121,7 @@ async function getData(filter = {}) {
 
   loading.value = true
   const result = await list(
-    `school-years?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+    `finance/petty-cash-fund?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
   )
   loading.value = false
   data.value = result?.data?.result || []
@@ -125,7 +130,7 @@ async function getData(filter = {}) {
 }
 
 async function getExport() {
-  const result = await exports(`school-years`)
+  const result = await exports(`finance/petty-cash-fund`)
   if (result.status === 200) {
     Notify.create({
       message: 'Successfully export an excel',

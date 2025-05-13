@@ -1,15 +1,14 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">{{ AddorEdit }} Faculty</div>
+      <div class="text-h6">{{ AddorEdit }} Section</div>
     </q-card-section>
 
     <q-separator />
-
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Name" v-model="faculty.name" />
+          <q-input outlined dense label="Name" v-model="section.name" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -19,8 +18,13 @@
             dense
             label="Description"
             type="textarea"
-            v-model="faculty.description"
+            v-model="section.description"
           />
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
+          <q-input type="number" outlined dense label="Capacity" v-model="section.capacity" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -35,7 +39,7 @@
               { label: 'Active', value: 1 },
               { label: 'Inactive', value: 0 },
             ]"
-            v-model="faculty.is_active"
+            v-model="section.is_active"
           />
         </q-item-section>
       </q-item>
@@ -71,9 +75,10 @@ const AddorEdit = computed(() => {
   return 'Add'
 })
 
-const faculty = ref({
+const section = ref({
   name: '',
   description: '',
+  capacity: '',
   is_active: 1,
 })
 
@@ -82,10 +87,10 @@ const emit = defineEmits(['getData', 'closeModal'])
 async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
-    const result = await add('faculties', faculty.value)
+    const result = await add('sections', section.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully add a faculty',
+        message: 'Successfully add a section',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -101,10 +106,10 @@ async function submit() {
       })
     }
   } else if (AddorEdit.value === 'Edit') {
-    const result = await edit('faculties', props.value.value.id, faculty.value)
+    const result = await edit('sections', props.value.value.id, section.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully edit a faculty',
+        message: 'Successfully edit a section',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -125,9 +130,10 @@ async function submit() {
 
 onMounted(() => {
   if (AddorEdit.value === 'Edit') {
-    faculty.value.name = props.value.value.name
-    faculty.value.description = props.value.value.description
-    faculty.value.is_active = props.value.value.is_active
+    section.value.name = props.value.value.name
+    section.value.description = props.value.value.description
+    section.value.capacity = props.value.value.capacity
+    section.value.is_active = props.value.value.is_active
   }
 })
 </script>

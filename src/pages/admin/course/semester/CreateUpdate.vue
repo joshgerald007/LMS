@@ -127,7 +127,7 @@ async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
     const result = await add('semesters', semester.value)
-    if (!result.error) {
+    if (result.status === 200) {
       Notify.create({
         message: 'Successfully add a semsester',
         position: 'top-right',
@@ -137,11 +137,16 @@ async function submit() {
       emit('getData')
       emit('closeModal')
     } else {
-      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
+      Notify.create({
+        message: result.data.message,
+        position: 'top-right',
+        color: 'red',
+        timeout: 2000,
+      })
     }
   } else if (AddorEdit.value === 'Edit') {
     const result = await edit('semesters', props.value.value.id, semester.value)
-    if (!result.error) {
+    if (result.status === 200) {
       Notify.create({
         message: 'Successfully edit a semester',
         position: 'top-right',
@@ -151,7 +156,12 @@ async function submit() {
       emit('getData')
       emit('closeModal')
     } else {
-      Notify.create({ message: result.message, position: 'top-right', color: 'red', timeout: 2000 })
+      Notify.create({
+        message: result.data.message,
+        position: 'top-right',
+        color: 'red',
+        timeout: 2000,
+      })
     }
   }
   Loading.hide()

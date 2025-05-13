@@ -2,8 +2,8 @@
   <div class="q-pb-sm">
     <q-breadcrumbs>
       <q-breadcrumbs-el label="Home" />
-      <q-breadcrumbs-el label="Manage Course" />
-      <q-breadcrumbs-el label="Course" />
+      <q-breadcrumbs-el label="Finance" />
+      <q-breadcrumbs-el label="Other Payment" />
     </q-breadcrumbs>
   </div>
   <table-listing
@@ -25,7 +25,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this course?</span>
+          <span class="q-ml-sm">Are you sure you want to delete this other payment?</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import TableListing from '../../../components/TableListing.vue'
+import TableListing from '../../../../components/TableListing.vue'
 import CreateUpdate from './CreateUpdate.vue'
 import DetailsInfo from './DetailsInfo.vue'
 import { useRoute } from 'vue-router'
@@ -51,13 +51,6 @@ const route = useRoute()
 
 const columns = [
   {
-    name: 'code',
-    label: 'Code',
-    align: 'left',
-    field: 'code',
-    sortable: true,
-  },
-  {
     name: 'name',
     label: 'Name',
     align: 'left',
@@ -65,33 +58,18 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'faculty',
-    label: 'Faculty',
+    name: 'amount',
+    label: 'Amount',
     align: 'left',
-    field: (row) => {
-      return row.faculty?.name || '--'
-    },
+    field: 'amount',
     sortable: true,
-  },
-  {
-    name: 'is_active',
-    label: 'Status',
-    align: 'left',
-    field: (row) => {
-      if (row.is_active) {
-        return { label: 'Active', badgeColor: 'green' }
-      }
-      return { label: 'Inactive', badgeColor: 'red' }
-    },
-    sortable: true,
-    tag: 'badge',
   },
   {
     name: 'Actions',
     label: 'Actions',
     align: 'left',
     field: 'Actions',
-    sortable: true,
+    sortable: false,
   },
 ]
 
@@ -99,7 +77,7 @@ const tl = ref(null)
 
 async function deleteItem(id) {
   Loading.show()
-  const result = await del('course', id)
+  const result = await del('finance/other-payments', id)
   Loading.hide()
   if (result.status === 200) {
     tl.value.closeModal()
@@ -132,7 +110,7 @@ async function getData(filter = {}) {
 
   loading.value = true
   const result = await list(
-    `course?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
+    `finance/other-payments?search=${filter.search || ''}&per_page=${filter.page?.rowsPerPage || 10}&page=${filter.page?.page || 1}${start}${end}${sBy}${oBy}`,
   )
   loading.value = false
   data.value = result?.data?.result || []
@@ -141,7 +119,7 @@ async function getData(filter = {}) {
 }
 
 async function getExport() {
-  const result = await exports(`course`)
+  const result = await exports(`finance/other-payments`)
   if (result.status === 200) {
     Notify.create({
       message: 'Successfully export an excel',

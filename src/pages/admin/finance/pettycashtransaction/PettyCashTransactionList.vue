@@ -2,28 +2,24 @@
   <div class="q-pb-sm">
     <q-breadcrumbs>
       <q-breadcrumbs-el label="Home" />
-      <q-breadcrumbs-el label="Manage Course" />
-      <q-breadcrumbs-el label="Schedule" />
-      <q-breadcrumbs-el label="Subject Schedule" />
+      <q-breadcrumbs-el label="Manage Finance" />
+      <q-breadcrumbs-el label="Petty Cash" />
+      <q-breadcrumbs-el label="Transaction" />
     </q-breadcrumbs>
   </div>
   <q-card bordered no-shadow class="q-mb-md" style="box-shadow: none" v-if="route.params.id">
     <q-card-section class="row q-pb-lg q-pt-lg">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div class="text-subtitle1 q-px-md">
-          <div class="q-pb-sm text-weight-medium">Subject Details:</div>
+          <div class="q-pb-sm text-weight-medium">Petty Cash Details:</div>
           <div class="row">
             <div class="col-4">
-              Code:<br />
               Name:<br />
-              Unit:<br />
-              Price per Unit:
+              Amount:
             </div>
             <div class="col-4">
-              {{ substud?.data?.result?.code || '--' }}<br />
-              {{ substud?.data?.result?.name || '--' }}<br />
-              {{ substud?.data?.result?.units || '--' }}<br />
-              {{ substud?.data?.result?.price_per_unit || '--' }}
+              {{ pettycash?.data?.result?.name || '--' }}<br />
+              {{ pettycash?.data?.result?.amount || '--' }}
             </div>
           </div>
           <div class="row">
@@ -42,7 +38,7 @@
       </div>
     </q-card-section>
     <q-dialog v-model="editModal" persistent>
-      <CreateUpdateSubject :value="a" @closeModal="a.closeModal" />
+      <CreateUpdateTransaction :value="a" @closeModal="a.closeModal" />
     </q-dialog>
   </q-card>
   <table-listing
@@ -97,9 +93,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import TableListing from '../../../components/TableListing.vue'
-import CreateUpdate from './CreateUpdate.vue'
-import CreateUpdateSubject from '../subject/CreateUpdate.vue'
+import TableListing from '../../../../components/TableListing.vue'
+import CreateUpdate from '../pettycash/CreateUpdate.vue'
+import CreateUpdateTransaction from './CreateUpdate.vue'
 import DetailsInfo from './DetailsInfo.vue'
 import { useRoute } from 'vue-router'
 import { list, exports, show } from 'boot/get.js'
@@ -180,7 +176,7 @@ async function deleteItem(id) {
 
 const data = ref([])
 const loading = ref(false)
-const substud = ref({})
+const pettycash = ref({})
 
 async function getData(filter = {}) {
   let start = ''
@@ -217,15 +213,15 @@ async function getData(filter = {}) {
   data.value.descending = filter.page?.descending
 }
 
-async function getSubStudDetails() {
+async function getPettyCash() {
   let result
-  result = await show('subjects', route.params.id)
-  substud.value = result
+  result = await show('finance/petty-cash-fund', route.params.id)
+  pettycash.value = result
 }
 
 onMounted(() => {
   if (route.params.id) {
-    getSubStudDetails()
+    getPettyCash()
   }
 })
 

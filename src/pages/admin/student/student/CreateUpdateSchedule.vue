@@ -305,7 +305,7 @@ async function submitSchedule() {
 
   if (result.status === 200) {
     Notify.create({
-      message: 'Successfully add a school year',
+      message: 'Successfully add a student',
       position: 'top-right',
       color: 'green',
       timeout: 2000,

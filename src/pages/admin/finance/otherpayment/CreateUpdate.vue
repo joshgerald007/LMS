@@ -74,7 +74,7 @@ async function submit() {
     const result = await add('finance/other-payments', otherpayment.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully add a school year',
+        message: 'Successfully add an other payment',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -93,7 +93,7 @@ async function submit() {
     const result = await edit('finance/other-payments', props.value.value.id, otherpayment.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully edit a school year',
+        message: 'Successfully edit an other payment',
         position: 'top-right',
         color: 'green',
         timeout: 2000,

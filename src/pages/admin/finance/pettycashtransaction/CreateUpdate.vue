@@ -78,7 +78,7 @@ async function submit() {
     const result = await add('finance/petty-cash-transaction', pettycash.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully add a school year',
+        message: 'Successfully add a petty cash transaction',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -101,7 +101,7 @@ async function submit() {
     )
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully edit a school year',
+        message: 'Successfully edit a petty cash transaction',
         position: 'top-right',
         color: 'green',
         timeout: 2000,

@@ -191,6 +191,13 @@ const linksList = [
         separator: false,
         link: '/admin/finance/pettycash',
       },
+      {
+        icon: 'mdi-pound',
+        label: 'OR Number',
+        name: 'ORNumber',
+        separator: false,
+        link: '/admin/finance/ornumber',
+      },
     ],
   },
   {

@@ -44,8 +44,9 @@ export function exports(url) {
 }
 
 export function show(url, id) {
+  const paramID = id === '' ? '' : `/${id}`
   return api
-    .get(`${apiUrl}api/v1/${url}/${id}`, config)
+    .get(`${apiUrl}api/v1/${url}${paramID}`, config)
     .then((response) => {
       return response
     })

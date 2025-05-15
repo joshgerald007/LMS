@@ -68,7 +68,7 @@ async function submit() {
     const result = await add('student/scholarship', scholarship.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully add a school year',
+        message: 'Successfully add a scholarship',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -87,7 +87,7 @@ async function submit() {
     const result = await edit('student/scholarship', props.value.value.id, scholarship.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully edit a school year',
+        message: 'Successfully edit a scholarship',
         position: 'top-right',
         color: 'green',
         timeout: 2000,

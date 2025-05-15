@@ -74,7 +74,7 @@ async function submit() {
     const result = await add('finance/petty-cash-fund', pettycash.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully add a school year',
+        message: 'Successfully add a petty cash',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -93,7 +93,7 @@ async function submit() {
     const result = await edit('finance/petty-cash-fund', props.value.value.id, pettycash.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully edit a school year',
+        message: 'Successfully edit a petty cash',
         position: 'top-right',
         color: 'green',
         timeout: 2000,

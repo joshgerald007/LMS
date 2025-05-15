@@ -90,6 +90,11 @@ const routes = [
         component: import('pages/admin/finance/pettycashtransaction/PettyCashTransactionList.vue'),
       },
       {
+        path: '/admin/finance/ornumber',
+        name: 'OR Number',
+        component: import('pages/admin/finance/ornumber/ORNumberList.vue'),
+      },
+      {
         path: '/admin/student/student',
         name: 'Student',
         component: import('pages/admin/student/student/StudentList.vue'),

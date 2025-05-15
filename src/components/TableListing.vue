@@ -148,6 +148,14 @@
             size="sm"
             icon="add"
           />
+          <q-btn
+            v-if="!!slots['generate-modal']"
+            color="primary"
+            :label="`Generate ${props.name}`"
+            @click="toAdd()"
+            size="sm"
+            icon="add"
+          />
         </div>
       </template>
 
@@ -205,6 +213,9 @@
     </q-table>
     <q-dialog v-model="cuModal" persistent>
       <slot name="create-update-modal" :value="selectedValue" :closeModal="closeModal"></slot>
+    </q-dialog>
+    <q-dialog v-model="cuModal" persistent>
+      <slot name="generate-modal" :value="selectedValue" :closeModal="closeModal"></slot>
     </q-dialog>
     <q-dialog v-model="diModal" persistent>
       <slot name="details-info-modal" :value="selectedValue"></slot>

@@ -86,7 +86,7 @@ async function submit() {
     const result = await add('teachers', teacher.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully add a teacher',
+        message: 'Successfully add an audit trail',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -105,7 +105,7 @@ async function submit() {
     const result = await edit('teachers', props.value.value.id, teacher.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully edit a teacher',
+        message: 'Successfully edit an audit trail',
         position: 'top-right',
         color: 'green',
         timeout: 2000,

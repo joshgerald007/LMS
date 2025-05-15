@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">{{ AddorEdit }} Petty Cash Transaction</div>
+      <div class="text-h6">{{ AddorEdit }} Teacher</div>
     </q-card-section>
 
     <q-separator />
@@ -9,23 +9,33 @@
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
-          <q-input outlined dense label="Type" v-model="pettycash.type" />
+          <q-input outlined dense label="First Name" v-model="teacher.first_name" />
         </q-item-section>
       </q-item>
       <q-item>
+        <q-item-section justify-center>
+          <q-input outlined dense label="Last Name" v-model="teacher.last_name" />
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
+          <q-input outlined dense label="Email" v-model="teacher.email" />
+        </q-item-section>
+      </q-item>
+      <q-item v-if="AddorEdit === 'Add'">
+        <q-item-section justify-center>
+          <q-input outlined type="password" dense label="Password" v-model="teacher.password" />
+        </q-item-section>
+      </q-item>
+      <q-item v-if="AddorEdit === 'Add'">
         <q-item-section justify-center>
           <q-input
             outlined
+            type="password"
             dense
-            label="Description"
-            type="textarea"
-            v-model="pettycash.description"
+            label="Confirm Password"
+            v-model="teacher.confirm_password"
           />
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-input outlined dense label="Amount" type="text" v-model="pettycash.amount" />
         </q-item-section>
       </q-item>
     </q-card>
@@ -44,9 +54,6 @@ import { ref, computed, onMounted } from 'vue'
 import { add } from 'boot/post.js'
 import { edit } from 'boot/put.js'
 import { Loading, Notify } from 'quasar'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
 
 const props = defineProps({
   value: {
@@ -63,11 +70,12 @@ const AddorEdit = computed(() => {
   return 'Add'
 })
 
-const pettycash = ref({
-  petty_cash_fund_id: route.params.id,
-  type: '',
-  description: '',
-  amount: '',
+const teacher = ref({
+  first_name: '',
+  last_name: '',
+  email: '',
+  password: '',
+  confirm_password: '',
 })
 
 const emit = defineEmits(['getData', 'closeModal'])
@@ -75,10 +83,10 @@ const emit = defineEmits(['getData', 'closeModal'])
 async function submit() {
   Loading.show()
   if (AddorEdit.value === 'Add') {
-    const result = await add('finance/petty-cash-transaction', pettycash.value)
+    const result = await add('teachers', teacher.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully add a school year',
+        message: 'Successfully add a teacher',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -94,14 +102,10 @@ async function submit() {
       })
     }
   } else if (AddorEdit.value === 'Edit') {
-    const result = await edit(
-      'finance/petty-cash-transaction',
-      props.value.value.id,
-      pettycash.value,
-    )
+    const result = await edit('teachers', props.value.value.id, teacher.value)
     if (result.status === 200) {
       Notify.create({
-        message: 'Successfully edit a school year',
+        message: 'Successfully edit a teacher',
         position: 'top-right',
         color: 'green',
         timeout: 2000,
@@ -122,9 +126,11 @@ async function submit() {
 
 onMounted(() => {
   if (AddorEdit.value === 'Edit') {
-    pettycash.value.type = props.value.value.type
-    pettycash.value.description = props.value.value.description
-    pettycash.value.amount = props.value.value.amount
+    teacher.value.first_name = props.value.value.first_name
+    teacher.value.last_name = props.value.value.last_name
+    teacher.value.email = props.value.value.email
+    teacher.value.password = ''
+    teacher.value.confirm_password = ''
   }
 })
 </script>

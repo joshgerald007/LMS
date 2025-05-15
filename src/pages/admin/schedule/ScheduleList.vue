@@ -20,10 +20,10 @@
               Price per Unit:
             </div>
             <div class="col-4">
-              {{ substud?.data?.result?.code || '--' }}<br />
-              {{ substud?.data?.result?.name || '--' }}<br />
-              {{ substud?.data?.result?.units || '--' }}<br />
-              {{ substud?.data?.result?.price_per_unit || '--' }}
+              {{ subject?.data?.result?.code || '--' }}<br />
+              {{ subject?.data?.result?.name || '--' }}<br />
+              {{ subject?.data?.result?.units || '--' }}<br />
+              {{ subject?.data?.result?.price_per_unit || '--' }}
             </div>
           </div>
           <div class="row">
@@ -42,7 +42,7 @@
       </div>
     </q-card-section>
     <q-dialog v-model="editModal" persistent>
-      <CreateUpdateSubject :value="a" @closeModal="a.closeModal" />
+      <CreateUpdateSubject :value="{ value: subject?.data?.result || {} }" />
     </q-dialog>
   </q-card>
   <table-listing
@@ -180,7 +180,7 @@ async function deleteItem(id) {
 
 const data = ref([])
 const loading = ref(false)
-const substud = ref({})
+const subject = ref({})
 
 async function getData(filter = {}) {
   let start = ''
@@ -217,15 +217,15 @@ async function getData(filter = {}) {
   data.value.descending = filter.page?.descending
 }
 
-async function getSubStudDetails() {
+async function getSubjectDetails() {
   let result
   result = await show('subjects', route.params.id)
-  substud.value = result
+  subject.value = result
 }
 
 onMounted(() => {
   if (route.params.id) {
-    getSubStudDetails()
+    getSubjectDetails()
   }
 })
 

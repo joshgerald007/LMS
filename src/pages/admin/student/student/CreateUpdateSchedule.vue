@@ -187,6 +187,20 @@ let data = ref()
 
 const columns = [
   {
+    name: 'subject',
+    label: 'Subject',
+    align: 'left',
+    field: (row) => row.subject.name,
+    sortable: true,
+  },
+  {
+    name: 'unit',
+    label: 'Unit',
+    align: 'left',
+    field: (row) => row.subject.units,
+    sortable: true,
+  },
+  {
     name: 'room',
     label: 'Room',
     align: 'left',

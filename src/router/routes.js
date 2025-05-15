@@ -104,6 +104,16 @@ const routes = [
         name: 'Subsidy',
         component: import('pages/admin/student/subsidy/SubsidyList.vue'),
       },
+      {
+        path: '/admin/file',
+        name: 'File',
+        component: import('pages/admin/file/FileList.vue'),
+      },
+      {
+        path: '/admin/audittrail',
+        name: 'Audit Trail',
+        component: import('pages/admin/audittrail/AuditTrailList.vue'),
+      },
     ],
   },
 

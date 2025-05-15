@@ -38,7 +38,7 @@
       </div>
     </q-card-section>
     <q-dialog v-model="editModal" persistent>
-      <CreateUpdateTransaction :value="a" @closeModal="a.closeModal" />
+      <CreateUpdate :value="{ value: pettycash?.data?.result || {} }" />
     </q-dialog>
   </q-card>
   <table-listing
@@ -70,7 +70,7 @@
       </q-item>
     </template>
     <template #create-update-modal="a" v-if="route.params.id">
-      <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />
+      <CreateUpdateTransaction :value="a" @getData="getData" @closeModal="a.closeModal" />
     </template>
     <template #details-info-modal="a">
       <DetailsInfo :value="a" />
@@ -79,7 +79,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="mdi-exclamation" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this schedule?</span>
+          <span class="q-ml-sm">Are you sure you want to delete this petty cash transaction?</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -94,7 +94,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import TableListing from '../../../../components/TableListing.vue'
-import CreateUpdate from '../pettycash/CreateUpdate.vue'
+import CreateUpdate from '../pettycashtransaction/CreateUpdate.vue'
 import CreateUpdateTransaction from './CreateUpdate.vue'
 import DetailsInfo from './DetailsInfo.vue'
 import { useRoute } from 'vue-router'
@@ -112,45 +112,24 @@ const editModal = ref(false)
 
 const columns = [
   {
-    name: 'room',
-    label: 'Room',
+    name: 'type',
+    label: 'Type',
     align: 'left',
-    field: (row) => row.room.name,
+    field: 'type',
     sortable: true,
   },
   {
-    name: 'section',
-    label: 'Section',
+    name: 'description',
+    label: 'Description',
     align: 'left',
-    field: (row) => row.section.name,
+    field: 'description',
     sortable: true,
   },
   {
-    name: 'teacher',
-    label: 'Teacher',
+    name: 'amount',
+    label: 'Amount',
     align: 'left',
-    field: (row) => `${row.teacher.first_name} ${row.teacher.last_name}`,
-    sortable: true,
-  },
-  {
-    name: 'day',
-    label: 'Day',
-    align: 'left',
-    field: 'day_of_week',
-    sortable: true,
-  },
-  {
-    name: 'start_time',
-    label: 'Start Time',
-    align: 'left',
-    field: 'start_time',
-    sortable: true,
-  },
-  {
-    name: 'end_time',
-    label: 'End Time',
-    align: 'left',
-    field: 'end_time',
+    field: 'amount',
     sortable: true,
   },
   {
@@ -196,11 +175,7 @@ async function getData(filter = {}) {
   }
 
   let path = ''
-  if (route.name === 'Schedule') {
-    path = 'schedules/subject-schedule/get/subject'
-  } else {
-    path = `schedules/subject-schedule/subject/${route.params.id}`
-  }
+  path = `finance/petty-cash-transaction/get/list/${route.params.id}`
 
   loading.value = true
   const isactive = adv_filter.value.is_active ? `&is_active=${adv_filter.value.is_active}` : ''

@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 80vw">
     <q-card-section>
-      <div class="text-h6">Petty Cash Transaction Details</div>
+      <div class="text-h6">File Details</div>
     </q-card-section>
 
     <q-separator />
@@ -9,32 +9,32 @@
     <q-card class="q-py-md">
       <q-item>
         <q-item-section justify-center>
+          <q-field outlined label="File Name" stack-label readonly>
+            <template v-slot:control>
+              <div class="self-center full-width no-outline" tabindex="0">
+                {{ file.filename }}
+              </div>
+            </template>
+          </q-field>
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
+          <q-field outlined label="Path" stack-label readonly>
+            <template v-slot:control>
+              <div class="self-center full-width no-outline" tabindex="0">
+                {{ file.path }}
+              </div>
+            </template>
+          </q-field>
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section justify-center>
           <q-field outlined label="Type" stack-label readonly>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                {{ pettycash.type }}
-              </div>
-            </template>
-          </q-field>
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-field outlined label="Description" stack-label readonly>
-            <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">
-                {{ pettycash.description }}
-              </div>
-            </template>
-          </q-field>
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section justify-center>
-          <q-field outlined label="Amount" stack-label readonly>
-            <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">
-                {{ pettycash.amount }}
+                {{ file.type }}
               </div>
             </template>
           </q-field>
@@ -60,15 +60,15 @@ const props = defineProps({
   },
 })
 
-const pettycash = ref({
+const file = ref({
+  filename: '',
+  path: '',
   type: '',
-  description: '',
-  amount: '',
 })
 
 onMounted(() => {
-  pettycash.value.type = props.value.value.type
-  pettycash.value.description = props.value.value.description
-  pettycash.value.amount = props.value.value.amount
+  file.value.filename = props.value.value.filename
+  file.value.path = props.value.value.path
+  file.value.type = props.value.value.type
 })
 </script>

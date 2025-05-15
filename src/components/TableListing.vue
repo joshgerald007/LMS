@@ -325,6 +325,7 @@ onMounted(() => {
 :deep() thead tr:first-child th,
 .q-table__bottom {
   background-color: var(--q-primary);
+  color: white;
 }
 
 :deep() .my-sticky-table {

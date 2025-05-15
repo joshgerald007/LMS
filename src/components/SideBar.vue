@@ -200,13 +200,6 @@ const linksList = [
     name: 'Manage Student',
     child: [
       {
-        icon: 'mdi-account-school-outline',
-        label: 'Student',
-        name: 'Student',
-        separator: false,
-        link: '/admin/student/student',
-      },
-      {
         icon: 'mdi-star-circle',
         label: 'Scholarship',
         name: 'Semester',
@@ -221,6 +214,27 @@ const linksList = [
         link: '/admin/student/subsidy',
       },
     ],
+  },
+  {
+    icon: 'mdi-account-school-outline',
+    label: 'Student',
+    name: 'Student',
+    separator: false,
+    link: '/admin/student/student',
+  },
+  {
+    icon: 'mdi-file-document',
+    label: 'Files',
+    name: 'User',
+    separator: false,
+    link: '/admin/file',
+  },
+  {
+    icon: 'mdi-clipboard-text-clock',
+    label: 'Audit Trail',
+    name: 'User',
+    separator: false,
+    link: '/admin/audittrail',
   },
   {
     icon: 'mdi-account-group',

@@ -175,7 +175,7 @@
             </q-td>
             <q-td
               v-else
-              v-bind:style="!!slots['custom-action'] ? { width: '480px' } : { width: '350px' }"
+              v-bind:style="!!slots['custom-action'] ? { width: '580px' } : { width: '350px' }"
             >
               <q-btn
                 v-if="!!slots['details-info-modal']"

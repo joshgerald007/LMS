@@ -2,6 +2,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
 import { defineConfig } from '#q-app/wrappers'
+import 'dotenv/config.js'
 
 export default defineConfig((/* ctx */) => {
   return {
@@ -38,6 +39,9 @@ export default defineConfig((/* ctx */) => {
       },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
+      env: {
+        API_URL: process.env.API_URL,
+      },
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,

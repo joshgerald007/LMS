@@ -1,12 +1,11 @@
 import { api } from './axios'
-import { apiUrl } from './conf.json'
 import { Loading } from 'quasar'
 import { useCredentialsStore } from '../../src/stores/credentials'
 
 export function login(param) {
   Loading.show()
   return api
-    .post(`${apiUrl}login`, param)
+    .post(`${process.env.API_URL}login`, param)
     .then((response) => {
       Loading.hide()
       return response
@@ -28,7 +27,7 @@ const config = {
 export function logout() {
   Loading.show()
   return api
-    .post(`${apiUrl}logout`, null, config)
+    .post(`${process.env.API_URL}logout`, null, config)
     .then((response) => {
       Loading.hide()
       return response

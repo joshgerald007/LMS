@@ -1,5 +1,4 @@
 import { api } from './axios'
-import { apiUrl } from './conf.json'
 import { useCredentialsStore } from '../../src/stores/credentials'
 
 const store = useCredentialsStore()
@@ -12,7 +11,7 @@ const config = {
 
 export function add(url, param) {
   return api
-    .post(`${apiUrl}api/v1/${url}`, param, config)
+    .post(`${process.env.API_URL}api/v1/${url}`, param, config)
     .then((response) => {
       return response
     })

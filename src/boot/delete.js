@@ -1,5 +1,4 @@
 import { api } from './axios'
-import { apiUrl } from './conf.json'
 import { useCredentialsStore } from '../../src/stores/credentials'
 
 const store = useCredentialsStore()
@@ -12,7 +11,7 @@ const config = {
 
 export function del(url, id) {
   return api
-    .delete(`${apiUrl}api/v1/${url}/${id}`, config)
+    .delete(`${process.env.API_URL}api/v1/${url}/${id}`, config)
     .then((response) => {
       return response
     })

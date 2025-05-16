@@ -24,6 +24,14 @@
         icon="mdi-format-list-text"
         @click="router.push({ path: `/admin/schedule/student/${a.value.id}` })"
       ></q-btn>
+      <q-btn
+        label="Payment"
+        color="blue"
+        class="q-mr-md"
+        size="sm"
+        icon="mdi-printer-pos"
+        @click="router.push({ path: `/admin/payment/student/${a.value.id}` })"
+      ></q-btn>
     </template>
     <template #create-update-modal="a">
       <CreateUpdate :value="a" @getData="getData" @closeModal="a.closeModal" />

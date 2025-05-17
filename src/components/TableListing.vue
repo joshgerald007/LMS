@@ -152,7 +152,7 @@
             v-if="!!slots['generate-modal']"
             color="primary"
             :label="`Generate ${props.name}`"
-            @click="toAdd()"
+            @click="toGenerate()"
             size="sm"
             icon="add"
           />
@@ -214,7 +214,7 @@
     <q-dialog v-model="cuModal" persistent>
       <slot name="create-update-modal" :value="selectedValue" :closeModal="closeModal"></slot>
     </q-dialog>
-    <q-dialog v-model="cuModal" persistent>
+    <q-dialog v-model="gModal" persistent>
       <slot name="generate-modal" :value="selectedValue" :closeModal="closeModal"></slot>
     </q-dialog>
     <q-dialog v-model="diModal" persistent>
@@ -233,6 +233,7 @@ import { date } from 'quasar'
 const slots = useSlots()
 
 const cuModal = ref(false)
+const gModal = ref(false)
 const diModal = ref(false)
 const confirmModal = ref(false)
 
@@ -270,6 +271,11 @@ const props = defineProps({
 
 function toAdd() {
   cuModal.value = true
+  selectedValue.value = {}
+}
+
+function toGenerate() {
+  gModal.value = true
   selectedValue.value = {}
 }
 

@@ -70,6 +70,11 @@ const routes = [
         component: import('pages/admin/student/student/ScheduleList.vue'),
       },
       {
+        path: '/admin/payment/student/:id',
+        name: 'Student Payment',
+        component: import('pages/admin/student/student/PaymentProcess.vue'),
+      },
+      {
         path: '/admin/finance/addedbill',
         name: 'Added Bill',
         component: import('pages/admin/finance/addedbill/AddedBillList.vue'),
